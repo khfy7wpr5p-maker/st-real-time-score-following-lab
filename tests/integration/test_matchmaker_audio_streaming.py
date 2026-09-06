@@ -1,5 +1,5 @@
 from pathlib import Path
-from threading import Thread
+from threading import Event, Thread
 from time import sleep
 
 import pytest
@@ -25,9 +25,16 @@ from st_score_following.streaming import (  # noqa: E402
 )
 
 
-def _accepted_put(ingress: BoundedStreamIngress[bytes], payload: bytes) -> None:
-    while ingress.put(payload) is None:
+def _accepted_put(
+    ingress: BoundedStreamIngress[bytes],
+    payload: bytes,
+    stop_event: Event,
+) -> bool:
+    while not stop_event.is_set():
+        if ingress.put(payload) is not None:
+            return True
         sleep(0.0005)
+    return False
 
 
 def _render_fixture_audio(score_path: Path):
@@ -45,9 +52,14 @@ def test_bounded_pcm_bytes_drive_matchmaker_audio_score_position() -> None:
     hop_length = SAMPLE_RATE // FRAME_RATE
     frame_duration_s = hop_length / SAMPLE_RATE
 
+    stop_event = Event()
     ingress = BoundedStreamIngress[bytes](maxsize=4)
     backend_queue = ObservedByteQueue(maxsize=4)
-    bridge = ByteQueueBridge(ingress=ingress, target_queue=backend_queue)
+    bridge = ByteQueueBridge(
+        ingress=ingress,
+        target_queue=backend_queue,
+        stop_event=stop_event,
+    )
     bridge_result = {}
     errors: list[BaseException] = []
 
@@ -60,11 +72,15 @@ def test_bounded_pcm_bytes_drive_matchmaker_audio_score_position() -> None:
     def produce() -> None:
         try:
             for start in range(0, len(audio), hop_length):
+                if stop_event.is_set():
+                    break
                 chunk = audio[start : start + hop_length]
                 if len(chunk) < hop_length:
                     chunk = np.pad(chunk, (0, hop_length - len(chunk)))
-                _accepted_put(ingress, np.asarray(chunk, dtype=np.float32).tobytes())
-                sleep(frame_duration_s)
+                payload = np.asarray(chunk, dtype=np.float32).tobytes()
+                if not _accepted_put(ingress, payload, stop_event):
+                    break
+                stop_event.wait(frame_duration_s)
         finally:
             ingress.close()
 
@@ -90,9 +106,10 @@ def test_bounded_pcm_bytes_drive_matchmaker_audio_score_position() -> None:
         emitted_clock=ingress.now_s,
         source_arrival_clock=backend_queue.last_source_arrival_s,
     )
+    stop_event.set()
 
-    producer_thread.join(timeout=12)
-    bridge_thread.join(timeout=12)
+    producer_thread.join(timeout=2)
+    bridge_thread.join(timeout=2)
 
     assert not errors
     assert not producer_thread.is_alive()
