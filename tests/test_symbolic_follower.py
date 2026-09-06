@@ -6,7 +6,12 @@ from st_score_following import CausalSymbolicFollower, ConfidenceV1, Performance
 from st_score_following.evaluation import oracle_performance_events, synthetic_score_events
 
 
-def _event(event_id: str, onset_s: float, pitch: int, confidence: float = 1.0) -> PerformanceEventV1:
+def _event(
+    event_id: str,
+    onset_s: float,
+    pitch: int,
+    confidence: float = 1.0,
+) -> PerformanceEventV1:
     return PerformanceEventV1(
         event_id=event_id,
         observed_at_s=onset_s,
