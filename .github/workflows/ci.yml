@@ -21,3 +21,20 @@ jobs:
       - run: python -m pip install -e ".[dev]"
       - run: ruff check .
       - run: pytest
+
+  matchmaker-baseline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install FluidSynth runtime
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libfluidsynth3
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -e ".[dev,matchmaker]"
+      - run: pytest tests/integration/test_matchmaker_baseline.py
+      - run: python benchmarks/run_matchmaker_baseline.py

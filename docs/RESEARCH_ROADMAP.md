@@ -2,8 +2,8 @@
 
 | Stage | Focus | State |
 |---|---|---|
-| SF-00 | Foundation, architecture, contracts | Active |
-| SF-01 | Matchmaker baseline reproduction | Next |
+| SF-00 | Foundation, architecture, contracts | Complete |
+| SF-01 | Matchmaker baseline reproduction | Active — CI evidence pending |
 | SF-02 | Realtime microphone/streaming | Planned |
 | SF-03 | Symbolic following path | Planned |
 | SF-04 | Solo violin | Planned; license gates apply |
@@ -18,4 +18,5 @@
 | SF-13 | Orchestra section research | Planned |
 | SF-14 | Production candidate extraction | Planned |
 
-A stage is not "complete" merely because code exists. Completion requires the evidence defined by its exit criteria and benchmark protocol.
+A stage is not "complete" merely because code exists. Completion requires the evidence defined by
+its exit criteria and benchmark protocol.

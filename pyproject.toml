@@ -14,6 +14,9 @@ dev = [
   "pytest>=8.3,<9",
   "ruff>=0.8,<1",
 ]
+matchmaker = [
+  "pymatchmaker==0.3.0",
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]

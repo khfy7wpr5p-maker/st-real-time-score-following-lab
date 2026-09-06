@@ -9,7 +9,7 @@ Produce benchmarkable `score position + tempo + confidence` from simulated or li
 ## Design rules
 
 - Canonical score truth and live observations are separate.
-- Every position estimate is uncertain and must carry confidence.
+- Every position estimate is uncertain; unavailable backend confidence is reported as unavailable, never fabricated.
 - Audio-only and transcription→symbolic following are parallel research paths.
 - Latency, recovery and robustness are first-class metrics alongside alignment accuracy.
 - Python is the research language; C++ extraction starts only after reproducible benchmark evidence.
@@ -17,9 +17,10 @@ Produce benchmarkable `score position + tempo + confidence` from simulated or li
 
 ## Current stage
 
-**SF-00 — Foundation, Architecture and Contracts.**
+**SF-01 — Matchmaker Baseline Reproduction.**
 
-Implemented on the foundation branch: typed v1 contracts, stream-relative clock/latency primitives, tests, CI, benchmark/data governance docs, and repository boundaries.
+SF-00 is complete and CI-validated. SF-01 adds an ST-owned follower adapter, pins
+`pymatchmaker==0.3.0`, and runs a legally safe synthetic MusicXML/MIDI baseline.
 
 ## Roadmap
 
@@ -32,6 +33,15 @@ python -m pip install -e ".[dev]"
 ruff check .
 pytest
 ```
+
+To reproduce the optional SF-01 Matchmaker baseline on a compatible environment:
+
+```bash
+python -m pip install -e ".[dev,matchmaker]"
+python benchmarks/run_matchmaker_baseline.py
+```
+
+Matchmaker 0.3.0 is evaluated only through an adapter and is not the ST runtime authority.
 
 ## Data policy
 
