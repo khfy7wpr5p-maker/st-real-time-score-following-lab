@@ -5,7 +5,10 @@ from pathlib import Path
 import pytest
 
 from st_score_following.integrations import StradiCsvOutputAdapter
-from st_score_following.symbolic import CausalSymbolicFollower, SymbolicScoreEvent
+from st_score_following.symbolic import (
+    CausalSymbolicFollower,
+    SymbolicScoreEvent,
+)
 
 
 FIXTURE = Path(__file__).parent / "fixtures" / "stradi_synthetic_violin_output.csv"
