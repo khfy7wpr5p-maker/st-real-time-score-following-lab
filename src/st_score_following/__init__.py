@@ -1,6 +1,6 @@
 """Core contracts for ST Real-Time Score Following Lab."""
 
-from .clock import LatencySample, StreamClock
+from .clock import LatencySample, LatencySummary, StreamClock, summarize_latency_s
 from .contracts import (
     AlignmentV1,
     ConfidenceV1,
@@ -18,6 +18,7 @@ __all__ = [
     "CausalSymbolicFollower",
     "ConfidenceV1",
     "LatencySample",
+    "LatencySummary",
     "ObservationKind",
     "ObservationV1",
     "PerformanceEventV1",
@@ -27,4 +28,5 @@ __all__ = [
     "TempoStateV1",
     "TranscriptionAdapter",
     "TranscriptionRunResult",
+    "summarize_latency_s",
 ]
