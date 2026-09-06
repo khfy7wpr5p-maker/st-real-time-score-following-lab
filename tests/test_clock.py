@@ -1,6 +1,6 @@
 import pytest
 
-from st_score_following import LatencySample, StreamClock
+from st_score_following import LatencySample, StreamClock, summarize_latency_s
 
 
 def test_stream_clock_is_relative() -> None:
@@ -20,3 +20,16 @@ def test_stream_clock_detects_backwards_time() -> None:
 def test_latency_sample() -> None:
     sample = LatencySample(input_timestamp_s=1.0, output_timestamp_s=1.075)
     assert sample.latency_s == pytest.approx(0.075)
+
+
+def test_latency_summary_reports_mean_p95_and_max() -> None:
+    summary = summarize_latency_s([0.001, 0.002, 0.003, 0.010])
+    assert summary.count == 4
+    assert summary.mean_s == pytest.approx(0.004)
+    assert summary.p95_s == pytest.approx(0.00895)
+    assert summary.max_s == pytest.approx(0.010)
+
+
+def test_latency_summary_rejects_negative_samples() -> None:
+    with pytest.raises(ValueError):
+        summarize_latency_s([0.001, -0.001])

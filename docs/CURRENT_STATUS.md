@@ -6,24 +6,37 @@ Date: 2026-09-06
 
 - SF-00 Foundation, Architecture and Contracts: **complete; CI green on Python 3.11/3.12**.
 - SF-01 Matchmaker Baseline Reproduction: **complete; CI + permanent benchmark evidence**.
-- SF-02 Realtime Microphone and Streaming Pipeline: **active; bounded streaming foundation implemented, CI evidence pending**.
+- SF-02 Realtime Microphone and Streaming Pipeline: **complete for repository-owned synthetic realtime streaming evidence; physical microphone validation remains environment-specific**.
+- SF-03 Symbolic Following Path: **next autonomous stage**.
 
-## SF-02 implemented on active branch
+## SF-02 completed scope
 
-- ST-owned bounded stream ingress.
-- Explicit `reject_newest` and `drop_oldest` overflow policies with counters.
+- ST-owned bounded stream ingress with explicit `reject_newest` and `drop_oldest` policies.
 - Per-packet sequence IDs and canonical monotonic arrival timestamps.
-- Close/drain semantics that do not require sacrificing a queued payload for a sentinel.
-- Bounded raw-byte backend bridge with explicit full-queue timeout behavior.
-- Ingress-to-backend-queue transport-latency instrumentation.
-- Matchmaker adapter support for custom streams and ST-clock follower emission timestamps.
-- Real Matchmaker `BytesMidiStream` integration test using synthetic Web-MIDI-style note bytes.
-- Streaming smoke benchmark that reports queue pressure, transport timing and score-position progress.
+- Bounded backend bridge with observable queue pressure and explicit timeout/cancellation behavior.
+- Mean/P95/max latency summaries for transport and ST ingress-to-follower-update boundaries.
+- Timestamp-observed backend queue that preserves Matchmaker's plain byte contract.
+- Matchmaker custom-stream adapter with live-input `on_ready` lifecycle hook after score preprocessing.
+- Real `pymatchmaker==0.3.0` synthetic Web-MIDI byte-stream integration.
+- Realtime-paced float32 PCM `BytesAudioStream` integration at 44.1 kHz / nominal 30 frames/s.
+- Consumer-complete cancellation so a producer cannot keep filling a bounded queue after the follower reaches score end.
 
-## Evidence level
+## SF-02 evidence
 
-SF-00 and SF-01 are validated. SF-02 is implemented but remains active until the new unit/integration tests and streaming benchmark are green in CI. The synthetic byte-stream test is not physical microphone evidence and does not claim full acoustic end-to-end latency.
+Final evidence run `34057173502` passed Python 3.11/3.12 core CI, three Matchmaker integration tests, and all baseline/streaming benchmarks.
+
+Synthetic PCM reached score beat 15.0 with 226 position updates. Ingress depth remained at most 1/4 with zero rejected/dropped chunks; ST ingress-to-follower-update latency was mean 2.852 ms, P95 2.969 ms and max 7.038 ms. MIDI byte streaming reached beat 15.0 with 16 updates; all 32 payloads were ultimately accepted and forwarded.
+
+Exact results and measurement boundaries are in `benchmarks/reports/SF02_REALTIME_STREAMING.md`.
+
+## Evidence limits
+
+- No physical microphone or acoustic-room path is claimed.
+- The PCM fixture is deterministically rendered from repository-owned synthetic score material.
+- The reported pipeline latency begins at ST ingress; hardware/ADC/browser/network latency is outside the boundary.
+- Matchmaker does not provide calibrated confidence for these updates, so confidence remains unavailable rather than fabricated.
+- SF-02 is transport/realtime architecture evidence, not violin/guitar/orchestra robustness evidence.
 
 ## Next safe action
 
-Run SF-02 CI. If the real Matchmaker byte-stream path is green, record the streaming benchmark output, then extend the input abstraction toward PCM/audio chunks and optional local microphone capture without making microphone hardware a CI dependency.
+Proceed autonomously to SF-03. Add an ST-owned transcription-observation adapter contract and a comparable audio-only vs symbolic-observation benchmark without assuming that symbolic following is automatically superior. Use synthetic/oracle observations only as architecture evidence until a real transcription model is separately validated.

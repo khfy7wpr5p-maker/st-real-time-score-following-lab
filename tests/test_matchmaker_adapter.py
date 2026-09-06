@@ -34,6 +34,33 @@ def test_adapter_normalizes_generator_return_path() -> None:
     assert result.confidence_available is False
 
 
+def test_stream_ready_hook_runs_after_backend_construction_before_consumption() -> None:
+    order: list[str] = []
+
+    class OrderedFakeMatchmaker(FakeMatchmaker):
+        def __init__(self, **kwargs):
+            order.append("constructed")
+            super().__init__(**kwargs)
+
+        def run(self, verbose=False):
+            order.append("run")
+            yield from super().run(verbose=verbose)
+
+    adapter = MatchmakerAdapter(
+        factory=OrderedFakeMatchmaker,
+        backend_version="0.3.0",
+    )
+    adapter.run_stream(
+        score_file="score.musicxml",
+        stream=object(),
+        input_type="midi",
+        method="pthmm",
+        on_ready=lambda: order.append("ready"),
+    )
+
+    assert order[:3] == ["constructed", "ready", "run"]
+
+
 def test_adapter_rejects_unknown_backend_version() -> None:
     with pytest.raises(RuntimeError):
         MatchmakerAdapter(
