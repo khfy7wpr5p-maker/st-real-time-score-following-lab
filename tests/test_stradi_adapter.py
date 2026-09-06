@@ -2,18 +2,18 @@ from pathlib import Path
 
 import pytest
 
-from st_score_following import CausalSymbolicFollower, StradiCsvOutputAdapter, SymbolicScoreEvent
+import st_score_following as st
 
 
 FIXTURE = Path(__file__).parent / "fixtures" / "stradi_synthetic_violin_output.csv"
 SCORE = tuple(
-    SymbolicScoreEvent(score_beat=float(index), midi_pitches=(pitch,))
+    st.SymbolicScoreEvent(score_beat=float(index), midi_pitches=(pitch,))
     for index, pitch in enumerate((69, 71, 72, 74, 76))
 )
 
 
 def test_stradi_csv_maps_events_without_fabricating_confidence() -> None:
-    result = StradiCsvOutputAdapter(backend_version="research-candidate").load_csv(FIXTURE)
+    result = st.StradiCsvOutputAdapter(backend_version="research-candidate").load_csv(FIXTURE)
 
     assert len(result.events) == 5
     assert result.events[0].observed_at_s == pytest.approx(0.0)
@@ -23,8 +23,8 @@ def test_stradi_csv_maps_events_without_fabricating_confidence() -> None:
 
 
 def test_symbolic_follower_accepts_unavailable_confidence_when_no_threshold() -> None:
-    transcription = StradiCsvOutputAdapter().load_csv(FIXTURE)
-    result = CausalSymbolicFollower(SCORE).run_events(transcription.events)
+    transcription = st.StradiCsvOutputAdapter().load_csv(FIXTURE)
+    result = st.CausalSymbolicFollower(SCORE).run_events(transcription.events)
 
     assert [update.score_beat for update in result.updates] == [0.0, 1.0, 2.0, 3.0, 4.0]
     assert all(update.confidence is None for update in result.updates)
@@ -33,8 +33,8 @@ def test_symbolic_follower_accepts_unavailable_confidence_when_no_threshold() ->
 
 
 def test_confidence_gate_rejects_events_when_confidence_is_unavailable() -> None:
-    transcription = StradiCsvOutputAdapter().load_csv(FIXTURE)
-    result = CausalSymbolicFollower(SCORE, min_event_confidence=0.5).run_events(
+    transcription = st.StradiCsvOutputAdapter().load_csv(FIXTURE)
+    result = st.CausalSymbolicFollower(SCORE, min_event_confidence=0.5).run_events(
         transcription.events
     )
 
@@ -43,8 +43,8 @@ def test_confidence_gate_rejects_events_when_confidence_is_unavailable() -> None
 
 
 def test_tempo_variation_timestamps_are_preserved() -> None:
-    transcription = StradiCsvOutputAdapter().load_csv(FIXTURE)
-    result = CausalSymbolicFollower(SCORE).run_events(transcription.events)
+    transcription = st.StradiCsvOutputAdapter().load_csv(FIXTURE)
+    result = st.CausalSymbolicFollower(SCORE).run_events(transcription.events)
 
     assert [point.performance_time_s for point in result.alignment_path] == pytest.approx(
         [0.0, 0.47, 1.02, 1.57, 2.18]
