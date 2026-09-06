@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from math import isfinite
 from time import monotonic
@@ -22,6 +22,38 @@ class LatencySample:
     @property
     def latency_s(self) -> float:
         return self.output_timestamp_s - self.input_timestamp_s
+
+
+@dataclass(frozen=True, slots=True)
+class LatencySummary:
+    count: int
+    mean_s: float
+    p95_s: float
+    max_s: float
+
+
+def summarize_latency_s(samples: Iterable[float]) -> LatencySummary:
+    values = sorted(float(value) for value in samples)
+    if not values:
+        return LatencySummary(count=0, mean_s=0.0, p95_s=0.0, max_s=0.0)
+    if any(not isfinite(value) or value < 0 for value in values):
+        raise ValueError("latency samples must be finite and >= 0")
+
+    if len(values) == 1:
+        p95 = values[0]
+    else:
+        position = 0.95 * (len(values) - 1)
+        lower = int(position)
+        upper = min(lower + 1, len(values) - 1)
+        fraction = position - lower
+        p95 = values[lower] + (values[upper] - values[lower]) * fraction
+
+    return LatencySummary(
+        count=len(values),
+        mean_s=sum(values) / len(values),
+        p95_s=p95,
+        max_s=values[-1],
+    )
 
 
 class StreamClock:
