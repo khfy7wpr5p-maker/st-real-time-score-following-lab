@@ -2,12 +2,12 @@ from pathlib import Path
 from threading import Thread
 from time import sleep
 
-import numpy as np
 import pytest
 
 pytest.importorskip("matchmaker")
+np = pytest.importorskip("numpy")
+partitura = pytest.importorskip("partitura")
 
-import partitura  # noqa: E402
 from matchmaker.features.audio import (  # noqa: E402
     FRAME_RATE,
     SAMPLE_RATE,
@@ -30,7 +30,7 @@ def _accepted_put(ingress: BoundedStreamIngress[bytes], payload: bytes) -> None:
         sleep(0.0005)
 
 
-def _render_fixture_audio(score_path: Path) -> np.ndarray:
+def _render_fixture_audio(score_path: Path):
     score = partitura.load_musicxml(str(score_path), ignore_invisible_objects=True)
     score_part = merge_parts(score.parts)
     return np.asarray(
