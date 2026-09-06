@@ -88,10 +88,16 @@ def run() -> dict[str, object]:
         },
         "limitations": [
             "Both paths use the same repository-owned 16-note score material.",
-            "The symbolic path receives perfect oracle note events; it is an architecture upper bound.",
+            (
+                "The symbolic path receives perfect oracle note events; "
+                "it is an architecture upper bound."
+            ),
             "No AMT/transcription model accuracy or latency is measured by the oracle path.",
             "Audio is deterministically synthesized from the score and is not a live performance.",
-            "Wall durations are implementation timings and are not comparable end-to-end latency claims.",
+            (
+                "Wall durations are implementation timings and are not comparable "
+                "end-to-end latency claims."
+            ),
             "A lower oracle symbolic error does not establish superiority on real instruments.",
         ],
     }
