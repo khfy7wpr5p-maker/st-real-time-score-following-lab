@@ -17,17 +17,21 @@ Produce benchmarkable `score position + tempo + confidence` from simulated or li
 
 ## Current stage
 
-**SF-03 — Symbolic Following Path is next.**
+**SF-03 — Symbolic Following Path is complete for the repository-owned synthetic comparison scope. SF-04 Solo Violin is next.**
 
-SF-00, SF-01 and SF-02 have reproducible CI evidence. SF-02 adds bounded realtime ingestion, explicit overflow/cancellation behavior, monotonic ST timing, raw MIDI streaming and realtime-paced float32 PCM streaming through `pymatchmaker==0.3.0`.
+SF-00 through SF-03 are CI-validated. SF-03 adds a backend-neutral transcription boundary and ST-owned causal symbolic follower, then compares direct audio-only alignment against a benchmark-only oracle transcription path on the same 16-note score material.
 
-The SF-02 synthetic PCM evidence reached score beat 15.0 at nominal 30 frames/s while ingress remained bounded at depth <= 1/4 with no rejected or dropped PCM chunks. The measured ST-ingress-to-follower-update latency on that runner was mean 2.852 ms, P95 2.969 ms and max 7.038 ms. These values exclude physical microphone/ADC/driver/network latency.
+Final SF-03 run `34058190673` passed Python 3.11/3.12 plus all Matchmaker integration and benchmark steps. Audio-only mean absolute onset error was 20.833 ms with P95 333.333 ms; the perfect oracle symbolic path was 0 ms across all 16 expected events. The oracle result is an architecture upper bound only and is not AMT-model evidence.
 
-See `benchmarks/reports/SF02_REALTIME_STREAMING.md` for exact evidence and limitations, and `benchmarks/reports/SF01_MATCHMAKER_SYNTHETIC_MIDI.md` for the baseline report.
+Evidence reports:
+
+- `benchmarks/reports/SF01_MATCHMAKER_SYNTHETIC_MIDI.md`
+- `benchmarks/reports/SF02_REALTIME_STREAMING.md`
+- `benchmarks/reports/SF03_SYMBOLIC_COMPARISON.md`
 
 ## Roadmap
 
-SF-00 foundation -> SF-01 Matchmaker baseline -> SF-02 realtime streaming -> SF-03 symbolic following -> instrument research -> robustness/recovery -> performance alignment -> ensemble/orchestra research -> production candidate extraction.
+SF-00 foundation -> SF-01 Matchmaker baseline -> SF-02 realtime streaming -> SF-03 symbolic following -> SF-04 solo violin -> SF-05 classical guitar -> robustness/recovery -> performance alignment -> ensemble/orchestra research -> production candidate extraction.
 
 ## Development
 
@@ -37,16 +41,17 @@ ruff check .
 pytest
 ```
 
-To reproduce Matchmaker research paths on a compatible environment:
+To reproduce optional Matchmaker research on a compatible environment:
 
 ```bash
 python -m pip install -e ".[dev,matchmaker]"
 python benchmarks/run_matchmaker_baseline.py
 python benchmarks/run_matchmaker_streaming_smoke.py
 python benchmarks/run_matchmaker_audio_streaming_smoke.py
+python benchmarks/run_symbolic_comparison.py
 ```
 
-Matchmaker 0.3.0 is evaluated only through an adapter and is not the ST runtime authority. Live producers must start through the adapter's ready lifecycle after backend score preprocessing.
+Matchmaker 0.3.0 is evaluated only through an adapter and is not the ST runtime authority.
 
 ## Data policy
 

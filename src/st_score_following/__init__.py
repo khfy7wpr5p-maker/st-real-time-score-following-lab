@@ -10,9 +10,12 @@ from .contracts import (
     ScorePositionV1,
     TempoStateV1,
 )
+from .symbolic import CausalSymbolicFollower, SymbolicScoreEvent
+from .transcription import TranscriptionAdapter, TranscriptionRunResult
 
 __all__ = [
     "AlignmentV1",
+    "CausalSymbolicFollower",
     "ConfidenceV1",
     "LatencySample",
     "LatencySummary",
@@ -21,6 +24,9 @@ __all__ = [
     "PerformanceEventV1",
     "ScorePositionV1",
     "StreamClock",
+    "SymbolicScoreEvent",
     "TempoStateV1",
+    "TranscriptionAdapter",
+    "TranscriptionRunResult",
     "summarize_latency_s",
 ]

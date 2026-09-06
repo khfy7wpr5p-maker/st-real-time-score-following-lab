@@ -7,36 +7,30 @@ Date: 2026-09-06
 - SF-00 Foundation, Architecture and Contracts: **complete; CI green on Python 3.11/3.12**.
 - SF-01 Matchmaker Baseline Reproduction: **complete; CI + permanent benchmark evidence**.
 - SF-02 Realtime Microphone and Streaming Pipeline: **complete for repository-owned synthetic realtime streaming evidence; physical microphone validation remains environment-specific**.
-- SF-03 Symbolic Following Path: **next autonomous stage**.
+- SF-03 Symbolic Following Path: **complete; same-material audio-vs-oracle-symbolic comparison is CI-green with permanent evidence**.
+- SF-04 Solo Violin: **next; instrument evidence and dataset/license requirements must be audited before materialization**.
 
-## SF-02 completed scope
+## SF-03 completed scope
 
-- ST-owned bounded stream ingress with explicit `reject_newest` and `drop_oldest` policies.
-- Per-packet sequence IDs and canonical monotonic arrival timestamps.
-- Bounded backend bridge with observable queue pressure and explicit timeout/cancellation behavior.
-- Mean/P95/max latency summaries for transport and ST ingress-to-follower-update boundaries.
-- Timestamp-observed backend queue that preserves Matchmaker's plain byte contract.
-- Matchmaker custom-stream adapter with live-input `on_ready` lifecycle hook after score preprocessing.
-- Real `pymatchmaker==0.3.0` synthetic Web-MIDI byte-stream integration.
-- Realtime-paced float32 PCM `BytesAudioStream` integration at 44.1 kHz / nominal 30 frames/s.
-- Consumer-complete cancellation so a producer cannot keep filling a bounded queue after the follower reaches score end.
+- Backend-neutral `TranscriptionAdapter` / `TranscriptionRunResult` boundary using existing `PerformanceEventV1` contracts.
+- Forward-only `CausalSymbolicFollower` with bounded lookahead, explicit unmatched/skip counters and optional confidence rejection.
+- Confidence provenance is propagated from transcription events; follower confidence is not fabricated.
+- Repository-owned benchmark-only oracle transcription fixture.
+- Same-material comparison: Matchmaker audio-only versus oracle transcription -> symbolic following using common expected-onset metrics.
+- Regression tests for complete following, unmatched observations, missing-event recovery and confidence filtering.
+- SF-02 public latency exports were regression-checked and preserved during SF-03 integration.
 
-## SF-02 evidence
+## SF-03 evidence
 
-Final evidence run `34057173502` passed Python 3.11/3.12 core CI, three Matchmaker integration tests, and all baseline/streaming benchmarks.
+Final CI run `34058190673` is green on Python 3.11/3.12 plus Matchmaker integration/benchmarks.
 
-Synthetic PCM reached score beat 15.0 with 226 position updates. Ingress depth remained at most 1/4 with zero rejected/dropped chunks; ST ingress-to-follower-update latency was mean 2.852 ms, P95 2.969 ms and max 7.038 ms. MIDI byte streaming reached beat 15.0 with 16 updates; all 32 payloads were ultimately accepted and forwarded.
+On the shared 16-event synthetic fixture:
 
-Exact results and measurement boundaries are in `benchmarks/reports/SF02_REALTIME_STREAMING.md`.
+- audio-only Matchmaker `arzt`: mean absolute error 20.833 ms, median 0 ms, P95 333.333 ms, 93.75% within 50/100/250 ms, 100% within 500 ms;
+- oracle transcription -> ST symbolic follower: 16/16 matched, 0 failures, 0 ms mean/median/P95 error.
 
-## Evidence limits
-
-- No physical microphone or acoustic-room path is claimed.
-- The PCM fixture is deterministically rendered from repository-owned synthetic score material.
-- The reported pipeline latency begins at ST ingress; hardware/ADC/browser/network latency is outside the boundary.
-- Matchmaker does not provide calibrated confidence for these updates, so confidence remains unavailable rather than fabricated.
-- SF-02 is transport/realtime architecture evidence, not violin/guitar/orchestra robustness evidence.
+The symbolic result is an oracle architecture upper bound, not an AMT-model result. Exact evidence and limitations are in `benchmarks/reports/SF03_SYMBOLIC_COMPARISON.md`.
 
 ## Next safe action
 
-Proceed autonomously to SF-03. Add an ST-owned transcription-observation adapter contract and a comparable audio-only vs symbolic-observation benchmark without assuming that symbolic following is automatically superior. Use synthetic/oracle observations only as architecture evidence until a real transcription model is separately validated.
+Audit SF-04 Solo Violin against `DATASET_GOVERNANCE.md`: identify what can be validated with repository-owned/synthetic material and isolate any licensed external-data requirement as a narrow human gate. Do not substitute synthetic piano evidence for real violin robustness.
