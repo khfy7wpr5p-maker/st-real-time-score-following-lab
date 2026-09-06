@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from queue import Queue
 from threading import Thread
 from time import sleep
 
@@ -11,7 +10,11 @@ from matchmaker.io.midi import BytesMidiStream
 
 from st_score_following.evaluation import SYNTHETIC_NOTES
 from st_score_following.followers import MatchmakerAdapter
-from st_score_following.streaming import BoundedStreamIngress, ByteQueueBridge
+from st_score_following.streaming import (
+    BoundedStreamIngress,
+    ByteQueueBridge,
+    ObservedByteQueue,
+)
 
 
 def _accepted_put(ingress: BoundedStreamIngress[bytes], payload: bytes) -> None:
@@ -22,7 +25,7 @@ def _accepted_put(ingress: BoundedStreamIngress[bytes], payload: bytes) -> None:
 def run() -> dict[str, object]:
     score = Path(__file__).parents[1] / "tests" / "fixtures" / "synthetic_piano.musicxml"
     ingress = BoundedStreamIngress[bytes](maxsize=8)
-    backend_queue: Queue[bytes | None] = Queue(maxsize=8)
+    backend_queue = ObservedByteQueue(maxsize=8)
     bridge = ByteQueueBridge(ingress=ingress, target_queue=backend_queue)
     bridge_result = {}
     errors: list[str] = []
@@ -58,6 +61,7 @@ def run() -> dict[str, object]:
         input_type="midi",
         method="pthmm",
         emitted_clock=ingress.now_s,
+        source_arrival_clock=backend_queue.last_source_arrival_s,
     )
 
     producer_thread.join(timeout=2)
@@ -68,6 +72,7 @@ def run() -> dict[str, object]:
     bridge_stats = bridge_result["stats"]
     ingress_stats = ingress.stats()
     update_times = [update.emitted_at_s for update in result.updates]
+    pipeline = result.backend_metrics.get("pipeline_latency")
 
     return {
         "schema": "st.score_following.streaming_benchmark.v1",
@@ -93,13 +98,23 @@ def run() -> dict[str, object]:
             "forwarded": bridge_stats.forwarded,
             "target_timeouts": bridge_stats.target_timeouts,
             "mean_transport_latency_ms": bridge_stats.mean_transport_latency_s * 1000,
+            "p95_transport_latency_ms": bridge_stats.p95_transport_latency_s * 1000,
             "max_transport_latency_ms": bridge_stats.max_transport_latency_s * 1000,
+        },
+        "pipeline_latency": None
+        if pipeline is None
+        else {
+            "boundary": pipeline["boundary"],
+            "samples": pipeline["samples"],
+            "mean_ms": pipeline["mean_s"] * 1000,
+            "p95_ms": pipeline["p95_s"] * 1000,
+            "max_ms": pipeline["max_s"] * 1000,
         },
         "limitations": [
             "Synthetic Web-MIDI-style bytes, not physical MIDI hardware or microphone audio.",
             (
-                "Bridge latency measures ST ingress-to-backend-queue transport, "
-                "not full acoustic end-to-end latency."
+                "Pipeline latency uses the ST ingress timestamp of the most recently "
+                "backend-consumed packet through follower update emission."
             ),
             (
                 "Backend stream timing remains Matchmaker-owned internally; ST canonical "
