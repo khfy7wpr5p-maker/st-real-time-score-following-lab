@@ -195,7 +195,14 @@ class MatchmakerAdapter:
         kwargs: dict[str, Any] | None = None,
         emitted_clock: Callable[[], float] | None = None,
         source_arrival_clock: Callable[[], float | None] | None = None,
+        on_ready: Callable[[], None] | None = None,
     ) -> FollowerRunResult:
+        """Run a custom live stream after backend score preprocessing is complete.
+
+        ``on_ready`` is invoked after Matchmaker construction/preprocessing and before
+        the backend starts reading the stream. Producers should be started from this
+        hook so bounded realtime queues do not fill while reference features are built.
+        """
         backend = self._factory(
             score_file=score_file,
             performance_file=None,
@@ -205,6 +212,8 @@ class MatchmakerAdapter:
             wait=False,
             kwargs=kwargs,
         )
+        if on_ready is not None:
+            on_ready()
         return self._collect_run(
             backend=backend,
             input_type=input_type,
