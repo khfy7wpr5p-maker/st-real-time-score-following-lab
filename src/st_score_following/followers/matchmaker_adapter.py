@@ -84,28 +84,18 @@ class MatchmakerAdapter:
                 f"{self.backend_version!r}; expected {self.supported_version!r}"
             )
 
-    def run_files(
+    def _collect_run(
         self,
         *,
-        score_file: str,
-        performance_file: str,
+        backend: Any,
         input_type: str,
-        method: str | None = None,
-        wait: bool = False,
-        verbose: bool = False,
-        kwargs: dict[str, Any] | None = None,
+        method: str | None,
+        verbose: bool,
+        emitted_clock: Callable[[], float] | None = None,
     ) -> FollowerRunResult:
-        backend = self._factory(
-            score_file=score_file,
-            performance_file=performance_file,
-            input_type=input_type,
-            method=method,
-            wait=wait,
-            kwargs=kwargs,
-        )
         generator = backend.run(verbose=verbose)
-
         started = perf_counter()
+        emission_clock = emitted_clock or (lambda: perf_counter() - started)
         updates: list[FollowerUpdate] = []
         alignment_path = None
 
@@ -122,7 +112,7 @@ class MatchmakerAdapter:
             updates.append(
                 FollowerUpdate(
                     score_beat=score_beat,
-                    emitted_at_s=perf_counter() - started,
+                    emitted_at_s=emission_clock(),
                     backend=self.backend_name,
                     confidence=None,
                 )
@@ -143,4 +133,58 @@ class MatchmakerAdapter:
             alignment_path=_normalize_alignment_path(alignment_path),
             wall_duration_s=wall_duration_s,
             backend_alignment_duration_s=backend_duration,
+        )
+
+    def run_files(
+        self,
+        *,
+        score_file: str,
+        performance_file: str,
+        input_type: str,
+        method: str | None = None,
+        wait: bool = False,
+        verbose: bool = False,
+        kwargs: dict[str, Any] | None = None,
+    ) -> FollowerRunResult:
+        backend = self._factory(
+            score_file=score_file,
+            performance_file=performance_file,
+            input_type=input_type,
+            method=method,
+            wait=wait,
+            kwargs=kwargs,
+        )
+        return self._collect_run(
+            backend=backend,
+            input_type=input_type,
+            method=method,
+            verbose=verbose,
+        )
+
+    def run_stream(
+        self,
+        *,
+        score_file: str,
+        stream: Any,
+        input_type: str,
+        method: str | None = None,
+        verbose: bool = False,
+        kwargs: dict[str, Any] | None = None,
+        emitted_clock: Callable[[], float] | None = None,
+    ) -> FollowerRunResult:
+        backend = self._factory(
+            score_file=score_file,
+            performance_file=None,
+            input_type=input_type,
+            method=method,
+            stream=stream,
+            wait=False,
+            kwargs=kwargs,
+        )
+        return self._collect_run(
+            backend=backend,
+            input_type=input_type,
+            method=method,
+            verbose=verbose,
+            emitted_clock=emitted_clock,
         )
