@@ -30,9 +30,8 @@ Oracle results are an architecture upper bound only. They must not be reported a
 
 ## SF-03 exit evidence
 
-The comparison benchmark must run both:
+SF-03 is complete for the repository-owned synthetic comparison scope. Final CI run `34058190673` passed Python 3.11/3.12, all Matchmaker integration tests, and `run_symbolic_comparison.py`.
 
-1. direct Matchmaker audio-only alignment; and
-2. oracle transcription -> ST causal symbolic following,
+The direct audio path and oracle transcription -> symbolic path were evaluated on the same 16-event material with the same expected-onset metrics. Exact metrics, conditions and limitations are preserved in `benchmarks/reports/SF03_SYMBOLIC_COMPARISON.md`.
 
-on the same score material and evaluate both with the same expected-onset metrics. SF-03 remains active until this benchmark and the core tests are green in CI and the exact output is preserved under `benchmarks/reports/`.
+Real AMT accuracy, transcription latency and instrument robustness remain future evidence requirements.

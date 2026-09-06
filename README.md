@@ -17,17 +17,21 @@ Produce benchmarkable `score position + tempo + confidence` from simulated or li
 
 ## Current stage
 
-**SF-03 — Symbolic Following Path is active.**
+**SF-03 — Symbolic Following Path is complete for the repository-owned synthetic comparison scope. SF-04 Solo Violin is next.**
 
-SF-00, SF-01 and SF-02 are complete and CI-validated. SF-02 established bounded realtime MIDI and PCM streaming with explicit queue-pressure, lifecycle and ST-ingress-to-follower latency evidence. SF-03 now adds a backend-neutral transcription boundary and a causal symbolic follower, then compares direct audio-only alignment against a benchmark-only oracle transcription path on the same repository-owned score material.
+SF-00 through SF-03 are CI-validated. SF-03 adds a backend-neutral transcription boundary and ST-owned causal symbolic follower, then compares direct audio-only alignment against a benchmark-only oracle transcription path on the same 16-note score material.
 
-Oracle transcription is an architecture upper bound only; it is not AMT model evidence.
+Final SF-03 run `34058190673` passed Python 3.11/3.12 plus all Matchmaker integration and benchmark steps. Audio-only mean absolute onset error was 20.833 ms with P95 333.333 ms; the perfect oracle symbolic path was 0 ms across all 16 expected events. The oracle result is an architecture upper bound only and is not AMT-model evidence.
 
-See `benchmarks/reports/SF01_MATCHMAKER_SYNTHETIC_MIDI.md` and `benchmarks/reports/SF02_REALTIME_STREAMING.md` for completed evidence. SF-03 evidence will be added only after its comparison benchmark passes CI.
+Evidence reports:
+
+- `benchmarks/reports/SF01_MATCHMAKER_SYNTHETIC_MIDI.md`
+- `benchmarks/reports/SF02_REALTIME_STREAMING.md`
+- `benchmarks/reports/SF03_SYMBOLIC_COMPARISON.md`
 
 ## Roadmap
 
-SF-00 foundation -> SF-01 Matchmaker baseline -> SF-02 realtime streaming -> SF-03 symbolic following -> instrument research -> robustness/recovery -> performance alignment -> ensemble/orchestra research -> production candidate extraction.
+SF-00 foundation -> SF-01 Matchmaker baseline -> SF-02 realtime streaming -> SF-03 symbolic following -> SF-04 solo violin -> SF-05 classical guitar -> robustness/recovery -> performance alignment -> ensemble/orchestra research -> production candidate extraction.
 
 ## Development
 
