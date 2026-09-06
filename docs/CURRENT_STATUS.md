@@ -4,33 +4,23 @@ Date: 2026-09-06
 
 ## Stage state
 
-- SF-00 Foundation, Architecture and Contracts: **complete; CI green on Python 3.11/3.12**.
-- SF-01 Matchmaker Baseline Reproduction: **complete; CI + permanent benchmark evidence**.
-- SF-02 Realtime Microphone and Streaming Pipeline: **complete for repository-owned synthetic realtime streaming evidence; physical microphone validation remains environment-specific**.
-- SF-03 Symbolic Following Path: **complete; same-material audio-vs-oracle-symbolic comparison is CI-green with permanent evidence**.
-- SF-04 Solo Violin: **next; instrument evidence and dataset/license requirements must be audited before materialization**.
+- SF-00 Foundation, Architecture and Contracts: **complete**.
+- SF-01 Matchmaker Baseline Reproduction: **complete; CI + permanent evidence**.
+- SF-02 Realtime Microphone and Streaming Pipeline: **complete for repository-owned synthetic realtime evidence**.
+- SF-03 Symbolic Following Path: **complete; audio-vs-oracle-symbolic comparison + permanent evidence**.
+- SF-04 Solo Violin: **active; autonomous STRAdi interface/preflight implemented, real model/data evidence gated by asset/audio usage confirmation**.
 
-## SF-03 completed scope
+## SF-04 autonomous progress
 
-- Backend-neutral `TranscriptionAdapter` / `TranscriptionRunResult` boundary using existing `PerformanceEventV1` contracts.
-- Forward-only `CausalSymbolicFollower` with bounded lookahead, explicit unmatched/skip counters and optional confidence rejection.
-- Confidence provenance is propagated from transcription events; follower confidence is not fabricated.
-- Repository-owned benchmark-only oracle transcription fixture.
-- Same-material comparison: Matchmaker audio-only versus oracle transcription -> symbolic following using common expected-onset metrics.
-- Regression tests for complete following, unmatched observations, missing-event recovery and confidence filtering.
-- SF-02 public latency exports were regression-checked and preserved during SF-03 integration.
+- STRAdi-style CSV output adapter maps onset/offset/MIDI events into ST contracts without importing STRAdi/PyTorch into core.
+- `PerformanceEventV1` now permits explicit unavailable confidence (`None`) rather than forcing a fabricated number.
+- `CausalSymbolicFollower` propagates unavailable confidence and explicitly rejects it when a positive confidence threshold is configured.
+- Repository-owned synthetic STRAdi-format fixture covers mapping, symbolic feed and irregular timing.
+- Dataset candidate manifest records that no checkpoint or KRAISLER audio has been downloaded/copied.
+- STRAdi source-code license is recorded as Apache-2.0; checkpoint asset terms and KRAISLER example-audio rights remain separate confirmation gates.
 
-## SF-03 evidence
+## Current boundary
 
-Final CI run `34058190673` is green on Python 3.11/3.12 plus Matchmaker integration/benchmarks.
+SF-04 architecture work can continue without third-party data, but its final exit criterion requires reproducible violin evidence. Synthetic CSV evidence must not be presented as violin transcription accuracy.
 
-On the shared 16-event synthetic fixture:
-
-- audio-only Matchmaker `arzt`: mean absolute error 20.833 ms, median 0 ms, P95 333.333 ms, 93.75% within 50/100/250 ms, 100% within 500 ms;
-- oracle transcription -> ST symbolic follower: 16/16 matched, 0 failures, 0 ms mean/median/P95 error.
-
-The symbolic result is an oracle architecture upper bound, not an AMT-model result. Exact evidence and limitations are in `benchmarks/reports/SF03_SYMBOLIC_COMPARISON.md`.
-
-## Next safe action
-
-Audit SF-04 Solo Violin against `DATASET_GOVERNANCE.md`: identify what can be validated with repository-owned/synthetic material and isolate any licensed external-data requirement as a narrow human gate. Do not substitute synthetic piano evidence for real violin robustness.
+See `docs/SF04_VIOLIN_PREFLIGHT.md` and `datasets/manifests/stradi_research_candidate.json`.
