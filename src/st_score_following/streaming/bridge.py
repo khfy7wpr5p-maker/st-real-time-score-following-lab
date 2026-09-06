@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from queue import Full, Queue
+from queue import Full
+from typing import Any
+
+from st_score_following.clock import summarize_latency_s
 
 from .ingress import BoundedStreamIngress
 
@@ -11,6 +14,7 @@ class BridgeStats:
     forwarded: int
     target_timeouts: int
     mean_transport_latency_s: float
+    p95_transport_latency_s: float
     max_transport_latency_s: float
 
 
@@ -21,7 +25,7 @@ class ByteQueueBridge:
         self,
         *,
         ingress: BoundedStreamIngress[bytes],
-        target_queue: Queue[bytes | None],
+        target_queue: Any,
         target_put_timeout_s: float = 0.05,
         max_consecutive_target_timeouts: int = 200,
     ) -> None:
@@ -34,12 +38,25 @@ class ByteQueueBridge:
         self._target_put_timeout_s = target_put_timeout_s
         self._max_consecutive_target_timeouts = max_consecutive_target_timeouts
 
-    def _put_target(self, payload: bytes | None) -> int:
+    def _put_target(
+        self,
+        payload: bytes | None,
+        *,
+        source_arrival_s: float | None,
+    ) -> int:
         consecutive_timeouts = 0
         total_timeouts = 0
         while True:
             try:
-                self._target_queue.put(payload, timeout=self._target_put_timeout_s)
+                put_packet = getattr(self._target_queue, "put_packet", None)
+                if callable(put_packet):
+                    put_packet(
+                        payload,
+                        source_arrival_s=source_arrival_s,
+                        timeout=self._target_put_timeout_s,
+                    )
+                else:
+                    self._target_queue.put(payload, timeout=self._target_put_timeout_s)
                 return total_timeouts
             except Full as exc:
                 consecutive_timeouts += 1
@@ -50,8 +67,7 @@ class ByteQueueBridge:
     def pump(self) -> BridgeStats:
         forwarded = 0
         target_timeouts = 0
-        total_transport_latency_s = 0.0
-        max_transport_latency_s = 0.0
+        transport_latencies_s: list[float] = []
 
         while True:
             try:
@@ -60,19 +76,21 @@ class ByteQueueBridge:
                 continue
 
             if packet is None:
-                target_timeouts += self._put_target(None)
+                target_timeouts += self._put_target(None, source_arrival_s=None)
                 break
 
-            target_timeouts += self._put_target(packet.payload)
-            latency_s = self._ingress.now_s() - packet.arrived_at_s
-            total_transport_latency_s += latency_s
-            max_transport_latency_s = max(max_transport_latency_s, latency_s)
+            target_timeouts += self._put_target(
+                packet.payload,
+                source_arrival_s=packet.arrived_at_s,
+            )
+            transport_latencies_s.append(self._ingress.now_s() - packet.arrived_at_s)
             forwarded += 1
 
-        mean_latency_s = total_transport_latency_s / forwarded if forwarded else 0.0
+        latency = summarize_latency_s(transport_latencies_s)
         return BridgeStats(
             forwarded=forwarded,
             target_timeouts=target_timeouts,
-            mean_transport_latency_s=mean_latency_s,
-            max_transport_latency_s=max_transport_latency_s,
+            mean_transport_latency_s=latency.mean_s,
+            p95_transport_latency_s=latency.p95_s,
+            max_transport_latency_s=latency.max_s,
         )
