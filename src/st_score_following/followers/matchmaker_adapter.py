@@ -12,26 +12,49 @@ MATCHMAKER_DISTRIBUTION = "pymatchmaker"
 SUPPORTED_MATCHMAKER_VERSION = "0.3.0"
 
 
+def _finite_point(score_beat: Any, performance_time_s: Any) -> AlignmentPoint | None:
+    score = float(score_beat)
+    perf = float(performance_time_s)
+    if not isfinite(score) or not isfinite(perf):
+        return None
+    return AlignmentPoint(score_beat=score, performance_time_s=perf)
+
+
 def _normalize_alignment_path(path: Any) -> tuple[AlignmentPoint, ...]:
+    """Normalize Matchmaker's documented ndarray and observed list-of-pairs forms."""
     if path is None:
         return ()
 
     try:
-        if len(path) != 2:
-            raise ValueError("Matchmaker alignment path must have shape (2, T)")
+        shape = path.shape
+    except AttributeError:
+        shape = None
+
+    points: list[AlignmentPoint] = []
+    if shape is not None and len(shape) == 2 and shape[0] == 2:
         score_axis, performance_axis = path[0], path[1]
         if len(score_axis) != len(performance_axis):
             raise ValueError("Matchmaker alignment axes must have equal length")
-    except TypeError as exc:
-        raise ValueError("Matchmaker alignment path is not indexable") from exc
+        for score_beat, performance_time_s in zip(
+            score_axis,
+            performance_axis,
+            strict=True,
+        ):
+            point = _finite_point(score_beat, performance_time_s)
+            if point is not None:
+                points.append(point)
+        return tuple(points)
 
-    points: list[AlignmentPoint] = []
-    for score_beat, performance_time_s in zip(score_axis, performance_axis, strict=True):
-        score = float(score_beat)
-        perf = float(performance_time_s)
-        if not isfinite(score) or not isfinite(perf):
-            continue
-        points.append(AlignmentPoint(score_beat=score, performance_time_s=perf))
+    try:
+        for item in path:
+            if len(item) != 2:
+                raise ValueError("Matchmaker pair alignment entries must have length 2")
+            point = _finite_point(item[0], item[1])
+            if point is not None:
+                points.append(point)
+    except TypeError as exc:
+        raise ValueError("Matchmaker alignment path is not a supported sequence") from exc
+
     return tuple(points)
 
 
