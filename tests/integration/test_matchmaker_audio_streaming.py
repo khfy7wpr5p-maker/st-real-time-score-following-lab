@@ -8,8 +8,6 @@ import pytest
 pytest.importorskip("matchmaker")
 
 import partitura  # noqa: E402
-from partitura.score import merge_parts  # noqa: E402
-
 from matchmaker.features.audio import (  # noqa: E402
     FRAME_RATE,
     SAMPLE_RATE,
@@ -17,6 +15,7 @@ from matchmaker.features.audio import (  # noqa: E402
 )
 from matchmaker.io.audio import BytesAudioStream  # noqa: E402
 from matchmaker.utils.misc import generate_score_audio  # noqa: E402
+from partitura.score import merge_parts  # noqa: E402
 
 from st_score_following.followers import MatchmakerAdapter  # noqa: E402
 from st_score_following.streaming import (  # noqa: E402
