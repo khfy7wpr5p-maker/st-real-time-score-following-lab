@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from threading import Thread
+from threading import Event, Thread
 from time import sleep
 
 import numpy as np
@@ -20,9 +20,16 @@ from st_score_following.streaming import (
 )
 
 
-def _accepted_put(ingress: BoundedStreamIngress[bytes], payload: bytes) -> None:
-    while ingress.put(payload) is None:
+def _accepted_put(
+    ingress: BoundedStreamIngress[bytes],
+    payload: bytes,
+    stop_event: Event,
+) -> bool:
+    while not stop_event.is_set():
+        if ingress.put(payload) is not None:
+            return True
         sleep(0.0005)
+    return False
 
 
 def _render_fixture_audio(score_path: Path) -> np.ndarray:
@@ -40,9 +47,14 @@ def run() -> dict[str, object]:
     hop_length = SAMPLE_RATE // FRAME_RATE
     frame_duration_s = hop_length / SAMPLE_RATE
 
+    stop_event = Event()
     ingress = BoundedStreamIngress[bytes](maxsize=4)
     backend_queue = ObservedByteQueue(maxsize=4)
-    bridge = ByteQueueBridge(ingress=ingress, target_queue=backend_queue)
+    bridge = ByteQueueBridge(
+        ingress=ingress,
+        target_queue=backend_queue,
+        stop_event=stop_event,
+    )
     bridge_result = {}
     errors: list[str] = []
 
@@ -55,11 +67,15 @@ def run() -> dict[str, object]:
     def produce() -> None:
         try:
             for start in range(0, len(audio), hop_length):
+                if stop_event.is_set():
+                    break
                 chunk = audio[start : start + hop_length]
                 if len(chunk) < hop_length:
                     chunk = np.pad(chunk, (0, hop_length - len(chunk)))
-                _accepted_put(ingress, np.asarray(chunk, dtype=np.float32).tobytes())
-                sleep(frame_duration_s)
+                payload = np.asarray(chunk, dtype=np.float32).tobytes()
+                if not _accepted_put(ingress, payload, stop_event):
+                    break
+                stop_event.wait(frame_duration_s)
         finally:
             ingress.close()
 
@@ -82,9 +98,10 @@ def run() -> dict[str, object]:
         emitted_clock=ingress.now_s,
         source_arrival_clock=backend_queue.last_source_arrival_s,
     )
+    stop_event.set()
 
-    producer_thread.join(timeout=12)
-    bridge_thread.join(timeout=12)
+    producer_thread.join(timeout=2)
+    bridge_thread.join(timeout=2)
     if errors or producer_thread.is_alive() or bridge_thread.is_alive():
         raise RuntimeError(f"audio streaming workers failed: {errors}")
 
@@ -115,6 +132,7 @@ def run() -> dict[str, object]:
         "bridge": {
             "forwarded": bridge_stats.forwarded,
             "target_timeouts": bridge_stats.target_timeouts,
+            "cancelled": bridge_stats.cancelled,
             "mean_transport_latency_ms": bridge_stats.mean_transport_latency_s * 1000,
             "p95_transport_latency_ms": bridge_stats.p95_transport_latency_s * 1000,
             "max_transport_latency_ms": bridge_stats.max_transport_latency_s * 1000,
@@ -133,6 +151,10 @@ def run() -> dict[str, object]:
             (
                 "The fixture is a transport/realtime architecture smoke test, "
                 "not musical robustness evidence."
+            ),
+            (
+                "Consumer-complete cancellation is expected when the follower reaches "
+                "the end of the score before the producer emits its final padded frame."
             ),
             "Matchmaker does not expose calibrated confidence for these score-position updates.",
         ],
