@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import asdict, dataclass, field
 from enum import StrEnum
 from math import isfinite
-from typing import Any, Mapping
+from typing import Any
 
 
 class ObservationKind(StrEnum):
