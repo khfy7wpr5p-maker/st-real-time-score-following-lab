@@ -36,5 +36,11 @@ jobs:
           sudo apt-get install -y libfluidsynth3
       - run: python -m pip install --upgrade pip
       - run: python -m pip install -e ".[dev,matchmaker]"
-      - run: pytest tests/integration/test_matchmaker_baseline.py
+      - run: >-
+          pytest
+          tests/integration/test_matchmaker_baseline.py
+          tests/integration/test_matchmaker_streaming.py
+          tests/integration/test_matchmaker_audio_streaming.py
       - run: python benchmarks/run_matchmaker_baseline.py
+      - run: python benchmarks/run_matchmaker_streaming_smoke.py
+      - run: python benchmarks/run_matchmaker_audio_streaming_smoke.py

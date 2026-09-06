@@ -6,6 +6,8 @@ from math import isfinite
 from time import perf_counter
 from typing import Any
 
+from st_score_following.clock import summarize_latency_s
+
 from .base import AlignmentPoint, FollowerRunResult, FollowerUpdate
 
 MATCHMAKER_DISTRIBUTION = "pymatchmaker"
@@ -84,6 +86,78 @@ class MatchmakerAdapter:
                 f"{self.backend_version!r}; expected {self.supported_version!r}"
             )
 
+    def _collect_run(
+        self,
+        *,
+        backend: Any,
+        input_type: str,
+        method: str | None,
+        verbose: bool,
+        emitted_clock: Callable[[], float] | None = None,
+        source_arrival_clock: Callable[[], float | None] | None = None,
+    ) -> FollowerRunResult:
+        generator = backend.run(verbose=verbose)
+        started = perf_counter()
+        emission_clock = emitted_clock or (lambda: perf_counter() - started)
+        updates: list[FollowerUpdate] = []
+        pipeline_latencies_s: list[float] = []
+        alignment_path = None
+
+        while True:
+            try:
+                position = next(generator)
+            except StopIteration as stop:
+                alignment_path = stop.value
+                break
+
+            score_beat = float(position)
+            if not isfinite(score_beat):
+                continue
+
+            emitted_at_s = emission_clock()
+            if source_arrival_clock is not None:
+                source_arrival_s = source_arrival_clock()
+                if source_arrival_s is not None and emitted_at_s >= source_arrival_s:
+                    pipeline_latencies_s.append(emitted_at_s - source_arrival_s)
+
+            updates.append(
+                FollowerUpdate(
+                    score_beat=score_beat,
+                    emitted_at_s=emitted_at_s,
+                    backend=self.backend_name,
+                    confidence=None,
+                )
+            )
+
+        wall_duration_s = perf_counter() - started
+        backend_duration = backend.alignment_duration
+        if backend_duration is not None:
+            backend_duration = float(backend_duration)
+
+        backend_metrics: dict[str, Any] = {}
+        if pipeline_latencies_s:
+            latency = summarize_latency_s(pipeline_latencies_s)
+            backend_metrics["pipeline_latency"] = {
+                "boundary": "st_ingress_accept_to_follower_update",
+                "samples": latency.count,
+                "mean_s": latency.mean_s,
+                "p95_s": latency.p95_s,
+                "max_s": latency.max_s,
+            }
+
+        resolved_method = method or backend.method
+        return FollowerRunResult(
+            backend=self.backend_name,
+            backend_version=self.backend_version,
+            method=str(resolved_method),
+            input_type=input_type,
+            updates=tuple(updates),
+            alignment_path=_normalize_alignment_path(alignment_path),
+            wall_duration_s=wall_duration_s,
+            backend_alignment_duration_s=backend_duration,
+            backend_metrics=backend_metrics,
+        )
+
     def run_files(
         self,
         *,
@@ -103,44 +177,48 @@ class MatchmakerAdapter:
             wait=wait,
             kwargs=kwargs,
         )
-        generator = backend.run(verbose=verbose)
-
-        started = perf_counter()
-        updates: list[FollowerUpdate] = []
-        alignment_path = None
-
-        while True:
-            try:
-                position = next(generator)
-            except StopIteration as stop:
-                alignment_path = stop.value
-                break
-
-            score_beat = float(position)
-            if not isfinite(score_beat):
-                continue
-            updates.append(
-                FollowerUpdate(
-                    score_beat=score_beat,
-                    emitted_at_s=perf_counter() - started,
-                    backend=self.backend_name,
-                    confidence=None,
-                )
-            )
-
-        wall_duration_s = perf_counter() - started
-        backend_duration = backend.alignment_duration
-        if backend_duration is not None:
-            backend_duration = float(backend_duration)
-
-        resolved_method = method or backend.method
-        return FollowerRunResult(
-            backend=self.backend_name,
-            backend_version=self.backend_version,
-            method=str(resolved_method),
+        return self._collect_run(
+            backend=backend,
             input_type=input_type,
-            updates=tuple(updates),
-            alignment_path=_normalize_alignment_path(alignment_path),
-            wall_duration_s=wall_duration_s,
-            backend_alignment_duration_s=backend_duration,
+            method=method,
+            verbose=verbose,
+        )
+
+    def run_stream(
+        self,
+        *,
+        score_file: str,
+        stream: Any,
+        input_type: str,
+        method: str | None = None,
+        verbose: bool = False,
+        kwargs: dict[str, Any] | None = None,
+        emitted_clock: Callable[[], float] | None = None,
+        source_arrival_clock: Callable[[], float | None] | None = None,
+        on_ready: Callable[[], None] | None = None,
+    ) -> FollowerRunResult:
+        """Run a custom live stream after backend score preprocessing is complete.
+
+        ``on_ready`` is invoked after Matchmaker construction/preprocessing and before
+        the backend starts reading the stream. Producers should be started from this
+        hook so bounded realtime queues do not fill while reference features are built.
+        """
+        backend = self._factory(
+            score_file=score_file,
+            performance_file=None,
+            input_type=input_type,
+            method=method,
+            stream=stream,
+            wait=False,
+            kwargs=kwargs,
+        )
+        if on_ready is not None:
+            on_ready()
+        return self._collect_run(
+            backend=backend,
+            input_type=input_type,
+            method=method,
+            verbose=verbose,
+            emitted_clock=emitted_clock,
+            source_arrival_clock=source_arrival_clock,
         )

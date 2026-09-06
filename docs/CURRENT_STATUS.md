@@ -5,41 +5,38 @@ Date: 2026-09-06
 ## Stage state
 
 - SF-00 Foundation, Architecture and Contracts: **complete; CI green on Python 3.11/3.12**.
-- SF-01 Matchmaker Baseline Reproduction: **complete; real `pymatchmaker==0.3.0` CI integration and benchmark green**.
-- SF-02 Realtime Microphone and Streaming Pipeline: **next; streaming foundation research prepared**.
+- SF-01 Matchmaker Baseline Reproduction: **complete; CI + permanent benchmark evidence**.
+- SF-02 Realtime Microphone and Streaming Pipeline: **complete for repository-owned synthetic realtime streaming evidence; physical microphone validation remains environment-specific**.
+- SF-03 Symbolic Following Path: **next autonomous stage**.
 
-## Implemented
+## SF-02 completed scope
 
-- Python package bootstrap and canonical v1 score/observation/tempo/confidence/alignment contracts.
-- Stream-relative monotonic clock and latency primitive.
-- Ruff + pytest CI on Python 3.11 and 3.12.
-- ST-owned follower adapter boundary.
-- Version-pinned `pymatchmaker==0.3.0` adapter with lazy optional dependency loading.
-- Matchmaker online score-beat update normalization and final score-beat/performance-time path normalization.
-- Adapter compatibility for both documented array-like `(2, T)` and observed PyPI-wheel pair-list `(T, 2)` alignment representations.
-- Synthetic 16-quarter-note MusicXML/MIDI baseline fixture generated without private or third-party data.
-- Baseline alignment metrics and dedicated Matchmaker CI job.
-- Permanent SF-01 evidence report under `benchmarks/reports/`.
+- ST-owned bounded stream ingress with explicit `reject_newest` and `drop_oldest` policies.
+- Per-packet sequence IDs and canonical monotonic arrival timestamps.
+- Bounded backend bridge with observable queue pressure and explicit timeout/cancellation behavior.
+- Mean/P95/max latency summaries for transport and ST ingress-to-follower-update boundaries.
+- Timestamp-observed backend queue that preserves Matchmaker's plain byte contract.
+- Matchmaker custom-stream adapter with live-input `on_ready` lifecycle hook after score preprocessing.
+- Real `pymatchmaker==0.3.0` synthetic Web-MIDI byte-stream integration.
+- Realtime-paced float32 PCM `BytesAudioStream` integration at 44.1 kHz / nominal 30 frames/s.
+- Consumer-complete cancellation so a producer cannot keep filling a bounded queue after the follower reaches score end.
 
-## SF-01 evidence
+## SF-02 evidence
 
-Successful GitHub Actions run: `34055613788`, Matchmaker job `101546846848`.
+Final evidence run `34057173502` passed Python 3.11/3.12 core CI, three Matchmaker integration tests, and all baseline/streaming benchmarks.
 
-- 16 online updates and 16 final alignment points.
-- 16/16 expected synthetic events evaluated; 0 failed events.
-- Median/mean/P95 absolute alignment error: 0.0 ms on this exact deterministic synthetic fixture.
-- 100% within 50/100/250/500 ms.
-- Wall duration: approximately 0.0136 s for an 8.0 s represented performance; reported realtime factor approximately 0.00170.
-- Matchmaker high-level updates expose no calibrated confidence, so confidence remains explicitly unavailable.
+Synthetic PCM reached score beat 15.0 with 226 position updates. Ingress depth remained at most 1/4 with zero rejected/dropped chunks; ST ingress-to-follower-update latency was mean 2.852 ms, P95 2.969 ms and max 7.038 ms. MIDI byte streaming reached beat 15.0 with 16 updates; all 32 payloads were ultimately accepted and forwarded.
 
-These numbers are smoke/reproducibility evidence only. They are not representative real-piano, microphone, expressive-performance, polyphonic, rubato or recovery results.
+Exact results and measurement boundaries are in `benchmarks/reports/SF02_REALTIME_STREAMING.md`.
 
-## Known backend observations
+## Evidence limits
 
-The installed Matchmaker 0.3.0 wheel returned the final alignment as a sequence of `(score_beat, performance_time_s)` pairs despite upstream source documentation describing a `(2, T)` array-like path. The ST adapter accepts both forms and regression tests preserve this boundary.
-
-The successful CI run also emitted non-fatal Partitura/HiddenMarkov warnings. They are recorded in the SF-01 evidence report rather than hidden.
+- No physical microphone or acoustic-room path is claimed.
+- The PCM fixture is deterministically rendered from repository-owned synthetic score material.
+- The reported pipeline latency begins at ST ingress; hardware/ADC/browser/network latency is outside the boundary.
+- Matchmaker does not provide calibrated confidence for these updates, so confidence remains unavailable rather than fabricated.
+- SF-02 is transport/realtime architecture evidence, not violin/guitar/orchestra robustness evidence.
 
 ## Next safe action
 
-Begin SF-02 with an ST-owned bounded ingestion queue, explicit overflow behavior and monotonic arrival timestamps. Use synthetic MIDI/byte streams first, then bridge to Matchmaker byte-stream adapters without treating backend `time.time()` values as the canonical ST latency clock. Microphone-device testing can remain optional while the architecture and synthetic streaming path progress.
+Proceed autonomously to SF-03. Add an ST-owned transcription-observation adapter contract and a comparable audio-only vs symbolic-observation benchmark without assuming that symbolic following is automatically superior. Use synthetic/oracle observations only as architecture evidence until a real transcription model is separately validated.
