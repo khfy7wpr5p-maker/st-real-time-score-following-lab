@@ -17,10 +17,14 @@ Produce benchmarkable `score position + tempo + confidence` from simulated or li
 
 ## Current stage
 
-**SF-01 — Matchmaker Baseline Reproduction.**
+**SF-02 — Realtime Streaming Foundation is next.**
 
-SF-00 is complete and CI-validated. SF-01 adds an ST-owned follower adapter, pins
-`pymatchmaker==0.3.0`, and runs a legally safe synthetic MusicXML/MIDI baseline.
+SF-00 is complete and CI-validated. SF-01 is also complete: the ST-owned adapter runs a pinned
+`pymatchmaker==0.3.0` synthetic MusicXML/MIDI baseline in CI and records reproducible evidence.
+The clean 16-event fixture aligned 16/16 events with zero failures; this is deliberately only a
+smoke/reproducibility result, not a real-performance accuracy claim.
+
+See `benchmarks/reports/SF01_MATCHMAKER_SYNTHETIC_MIDI.md` for the exact evidence and limitations.
 
 ## Roadmap
 
