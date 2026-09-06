@@ -86,8 +86,10 @@ def test_bounded_pcm_bytes_drive_matchmaker_audio_score_position() -> None:
 
     bridge_thread = Thread(target=pump_bridge, daemon=True)
     producer_thread = Thread(target=produce, daemon=True)
-    bridge_thread.start()
-    producer_thread.start()
+
+    def start_live_input() -> None:
+        bridge_thread.start()
+        producer_thread.start()
 
     stream = BytesAudioStream(
         processor=ChromagramProcessor(
@@ -105,6 +107,7 @@ def test_bounded_pcm_bytes_drive_matchmaker_audio_score_position() -> None:
         method="arzt",
         emitted_clock=ingress.now_s,
         source_arrival_clock=backend_queue.last_source_arrival_s,
+        on_ready=start_live_input,
     )
     stop_event.set()
 
