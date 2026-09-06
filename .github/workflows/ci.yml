@@ -44,3 +44,4 @@ jobs:
       - run: python benchmarks/run_matchmaker_baseline.py
       - run: python benchmarks/run_matchmaker_streaming_smoke.py
       - run: python benchmarks/run_matchmaker_audio_streaming_smoke.py
+      - run: python benchmarks/run_symbolic_comparison.py
