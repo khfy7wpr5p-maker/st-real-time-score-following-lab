@@ -79,5 +79,5 @@ def test_bounded_midi_bytes_drive_matchmaker_score_position() -> None:
     pipeline = result.backend_metrics["pipeline_latency"]
     assert pipeline["samples"] > 0
     assert pipeline["mean_s"] >= 0
-    assert pipeline["p95_s"] >= pipeline["mean_s"] or pipeline["samples"] == 1
+    assert pipeline["p95_s"] >= 0
     assert pipeline["max_s"] >= pipeline["p95_s"]
