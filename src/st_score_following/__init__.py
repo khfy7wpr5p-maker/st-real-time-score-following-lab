@@ -10,6 +10,7 @@ from .contracts import (
     ScorePositionV1,
     TempoStateV1,
 )
+from .integrations import StradiCsvOutputAdapter
 from .symbolic import CausalSymbolicFollower, SymbolicScoreEvent
 from .transcription import TranscriptionAdapter, TranscriptionRunResult
 
@@ -23,6 +24,7 @@ __all__ = [
     "ObservationV1",
     "PerformanceEventV1",
     "ScorePositionV1",
+    "StradiCsvOutputAdapter",
     "StreamClock",
     "SymbolicScoreEvent",
     "TempoStateV1",
