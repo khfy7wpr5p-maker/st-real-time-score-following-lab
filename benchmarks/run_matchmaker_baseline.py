@@ -54,7 +54,10 @@ def run() -> dict[str, object]:
         "limitations": [
             "Synthetic monophonic piano-like MIDI; not a dataset-quality musical performance.",
             "Matchmaker high-level updates expose no calibrated confidence value.",
-            "This SF-01 baseline measures clean alignment only; recovery scenarios belong to SF-06.",
+            (
+                "This SF-01 baseline measures clean alignment only; "
+                "recovery scenarios belong to SF-06."
+            ),
         ],
     }
 
