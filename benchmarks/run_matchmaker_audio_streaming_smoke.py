@@ -7,11 +7,10 @@ from time import sleep
 
 import numpy as np
 import partitura
-from partitura.score import merge_parts
-
 from matchmaker.features.audio import FRAME_RATE, SAMPLE_RATE, ChromagramProcessor
 from matchmaker.io.audio import BytesAudioStream
 from matchmaker.utils.misc import generate_score_audio
+from partitura.score import merge_parts
 
 from st_score_following.followers import MatchmakerAdapter
 from st_score_following.streaming import (
@@ -131,7 +130,10 @@ def run() -> dict[str, object]:
         },
         "limitations": [
             "PCM is deterministically rendered from the synthetic score, not microphone capture.",
-            "The fixture is a transport/realtime architecture smoke test, not musical robustness evidence.",
+            (
+                "The fixture is a transport/realtime architecture smoke test, "
+                "not musical robustness evidence."
+            ),
             "Matchmaker does not expose calibrated confidence for these score-position updates.",
         ],
     }
