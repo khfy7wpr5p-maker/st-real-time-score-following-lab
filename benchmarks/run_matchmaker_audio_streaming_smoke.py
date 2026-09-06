@@ -81,8 +81,10 @@ def run() -> dict[str, object]:
 
     bridge_thread = Thread(target=pump_bridge, daemon=True)
     producer_thread = Thread(target=produce, daemon=True)
-    bridge_thread.start()
-    producer_thread.start()
+
+    def start_live_input() -> None:
+        bridge_thread.start()
+        producer_thread.start()
 
     stream = BytesAudioStream(
         processor=ChromagramProcessor(sample_rate=SAMPLE_RATE, hop_length=hop_length),
@@ -97,6 +99,7 @@ def run() -> dict[str, object]:
         method="arzt",
         emitted_clock=ingress.now_s,
         source_arrival_clock=backend_queue.last_source_arrival_s,
+        on_ready=start_live_input,
     )
     stop_event.set()
 
@@ -151,6 +154,10 @@ def run() -> dict[str, object]:
             (
                 "The fixture is a transport/realtime architecture smoke test, "
                 "not musical robustness evidence."
+            ),
+            (
+                "Live input starts only after backend score preprocessing; this avoids "
+                "counting follower warm-up as realtime queue pressure."
             ),
             (
                 "Consumer-complete cancellation is expected when the follower reaches "
