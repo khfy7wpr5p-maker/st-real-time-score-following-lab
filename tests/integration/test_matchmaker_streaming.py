@@ -7,6 +7,7 @@ import pytest
 
 pytest.importorskip("matchmaker")
 
+from matchmaker.features.midi import PitchProcessor  # noqa: E402
 from matchmaker.io.midi import BytesMidiStream  # noqa: E402
 
 from st_score_following.evaluation import SYNTHETIC_NOTES  # noqa: E402
@@ -48,7 +49,11 @@ def test_bounded_midi_bytes_drive_matchmaker_score_position() -> None:
     bridge_thread.start()
     producer_thread.start()
 
-    stream = BytesMidiStream(data_queue=backend_queue, polling_period=None)
+    stream = BytesMidiStream(
+        processor=PitchProcessor(piano_range=True),
+        data_queue=backend_queue,
+        polling_period=None,
+    )
     result = MatchmakerAdapter().run_stream(
         score_file=str(score),
         stream=stream,
