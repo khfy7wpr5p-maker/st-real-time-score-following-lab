@@ -50,7 +50,7 @@ class MatchmakerAdapter:
     ) -> None:
         if factory is None:
             module = import_module("matchmaker")
-            factory = getattr(module, "Matchmaker")
+            factory = module.Matchmaker
             backend_version = metadata.version(MATCHMAKER_DISTRIBUTION)
 
         self._factory = factory
@@ -106,11 +106,11 @@ class MatchmakerAdapter:
             )
 
         wall_duration_s = perf_counter() - started
-        backend_duration = getattr(backend, "alignment_duration", None)
+        backend_duration = backend.alignment_duration
         if backend_duration is not None:
             backend_duration = float(backend_duration)
 
-        resolved_method = method or getattr(backend, "method", "default")
+        resolved_method = method or backend.method
         return FollowerRunResult(
             backend=self.backend_name,
             backend_version=self.backend_version,
