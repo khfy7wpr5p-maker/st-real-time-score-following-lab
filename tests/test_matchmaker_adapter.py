@@ -13,7 +13,7 @@ class FakeMatchmaker:
         yield 0.0
         yield 1.0
         self.alignment_duration = 0.01
-        return [[0.0, 1.0], [0.0, 0.5]]
+        return [(0.0, 0.0), (1.0, 0.5)]
 
 
 def test_adapter_normalizes_generator_return_path() -> None:
