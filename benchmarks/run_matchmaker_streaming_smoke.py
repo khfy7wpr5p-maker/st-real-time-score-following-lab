@@ -6,6 +6,7 @@ from queue import Queue
 from threading import Thread
 from time import sleep
 
+from matchmaker.features.midi import PitchProcessor
 from matchmaker.io.midi import BytesMidiStream
 
 from st_score_following.evaluation import SYNTHETIC_NOTES
@@ -46,7 +47,11 @@ def run() -> dict[str, object]:
     bridge_thread.start()
     producer_thread.start()
 
-    stream = BytesMidiStream(data_queue=backend_queue, polling_period=None)
+    stream = BytesMidiStream(
+        processor=PitchProcessor(piano_range=True),
+        data_queue=backend_queue,
+        polling_period=None,
+    )
     result = MatchmakerAdapter().run_stream(
         score_file=str(score),
         stream=stream,
@@ -92,8 +97,14 @@ def run() -> dict[str, object]:
         },
         "limitations": [
             "Synthetic Web-MIDI-style bytes, not physical MIDI hardware or microphone audio.",
-            "Bridge latency measures ST ingress-to-backend-queue transport, not full acoustic end-to-end latency.",
-            "Backend stream timing remains Matchmaker-owned internally; ST canonical arrival/emission timestamps use StreamClock.",
+            (
+                "Bridge latency measures ST ingress-to-backend-queue transport, "
+                "not full acoustic end-to-end latency."
+            ),
+            (
+                "Backend stream timing remains Matchmaker-owned internally; ST canonical "
+                "arrival/emission timestamps use StreamClock."
+            ),
         ],
     }
 
