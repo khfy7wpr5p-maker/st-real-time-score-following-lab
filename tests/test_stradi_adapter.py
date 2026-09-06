@@ -4,7 +4,6 @@ import pytest
 
 import st_score_following as st
 
-
 FIXTURE = Path(__file__).parent / "fixtures" / "stradi_synthetic_violin_output.csv"
 SCORE = tuple(
     st.SymbolicScoreEvent(score_beat=float(index), midi_pitches=(pitch,))
