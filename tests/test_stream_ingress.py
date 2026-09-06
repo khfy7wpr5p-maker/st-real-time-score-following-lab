@@ -1,3 +1,5 @@
+import pytest
+
 from st_score_following.clock import StreamClock
 from st_score_following.streaming import BoundedStreamIngress, OverflowPolicy
 
@@ -14,8 +16,8 @@ def test_ingress_assigns_sequence_and_monotonic_arrival_time() -> None:
 
     assert first is not None and first.sequence_id == 0
     assert second is not None and second.sequence_id == 1
-    assert first.arrived_at_s == 0.1
-    assert second.arrived_at_s == 0.2
+    assert first.arrived_at_s == pytest.approx(0.1)
+    assert second.arrived_at_s == pytest.approx(0.2)
 
 
 def test_reject_newest_is_explicit_and_counted() -> None:
