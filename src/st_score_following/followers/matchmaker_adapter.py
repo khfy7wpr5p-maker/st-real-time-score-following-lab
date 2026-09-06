@@ -6,6 +6,8 @@ from math import isfinite
 from time import perf_counter
 from typing import Any
 
+from st_score_following.clock import summarize_latency_s
+
 from .base import AlignmentPoint, FollowerRunResult, FollowerUpdate
 
 MATCHMAKER_DISTRIBUTION = "pymatchmaker"
@@ -92,11 +94,13 @@ class MatchmakerAdapter:
         method: str | None,
         verbose: bool,
         emitted_clock: Callable[[], float] | None = None,
+        source_arrival_clock: Callable[[], float | None] | None = None,
     ) -> FollowerRunResult:
         generator = backend.run(verbose=verbose)
         started = perf_counter()
         emission_clock = emitted_clock or (lambda: perf_counter() - started)
         updates: list[FollowerUpdate] = []
+        pipeline_latencies_s: list[float] = []
         alignment_path = None
 
         while True:
@@ -109,10 +113,17 @@ class MatchmakerAdapter:
             score_beat = float(position)
             if not isfinite(score_beat):
                 continue
+
+            emitted_at_s = emission_clock()
+            if source_arrival_clock is not None:
+                source_arrival_s = source_arrival_clock()
+                if source_arrival_s is not None and emitted_at_s >= source_arrival_s:
+                    pipeline_latencies_s.append(emitted_at_s - source_arrival_s)
+
             updates.append(
                 FollowerUpdate(
                     score_beat=score_beat,
-                    emitted_at_s=emission_clock(),
+                    emitted_at_s=emitted_at_s,
                     backend=self.backend_name,
                     confidence=None,
                 )
@@ -122,6 +133,17 @@ class MatchmakerAdapter:
         backend_duration = backend.alignment_duration
         if backend_duration is not None:
             backend_duration = float(backend_duration)
+
+        backend_metrics: dict[str, Any] = {}
+        if pipeline_latencies_s:
+            latency = summarize_latency_s(pipeline_latencies_s)
+            backend_metrics["pipeline_latency"] = {
+                "boundary": "st_ingress_accept_to_follower_update",
+                "samples": latency.count,
+                "mean_s": latency.mean_s,
+                "p95_s": latency.p95_s,
+                "max_s": latency.max_s,
+            }
 
         resolved_method = method or backend.method
         return FollowerRunResult(
@@ -133,6 +155,7 @@ class MatchmakerAdapter:
             alignment_path=_normalize_alignment_path(alignment_path),
             wall_duration_s=wall_duration_s,
             backend_alignment_duration_s=backend_duration,
+            backend_metrics=backend_metrics,
         )
 
     def run_files(
@@ -171,6 +194,7 @@ class MatchmakerAdapter:
         verbose: bool = False,
         kwargs: dict[str, Any] | None = None,
         emitted_clock: Callable[[], float] | None = None,
+        source_arrival_clock: Callable[[], float | None] | None = None,
     ) -> FollowerRunResult:
         backend = self._factory(
             score_file=score_file,
@@ -187,4 +211,5 @@ class MatchmakerAdapter:
             method=method,
             verbose=verbose,
             emitted_clock=emitted_clock,
+            source_arrival_clock=source_arrival_clock,
         )
