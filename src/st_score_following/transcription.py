@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Protocol
 
 from .contracts import PerformanceEventV1
@@ -14,6 +14,7 @@ class TranscriptionRunResult:
     backend_version: str
     events: tuple[PerformanceEventV1, ...]
     wall_duration_s: float
+    metadata: dict[str, object] = field(default_factory=dict)
 
 
 class TranscriptionAdapter(Protocol):

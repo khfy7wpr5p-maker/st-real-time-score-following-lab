@@ -128,7 +128,7 @@ class PerformanceEventV1:
     observed_at_s: float
     duration_s: float | None
     midi_pitches: tuple[int, ...]
-    confidence: ConfidenceV1
+    confidence: ConfidenceV1 | None
     schema_version: str = field(default="performance_event_v1", init=False)
 
     def __post_init__(self) -> None:

@@ -57,13 +57,22 @@ class CausalSymbolicFollower:
         unmatched = 0
         skipped_score_events = 0
         low_confidence_rejections = 0
+        unavailable_confidence = 0
+        unavailable_confidence_rejections = 0
         updates: list[FollowerUpdate] = []
         alignment_path: list[AlignmentPoint] = []
 
         for event in events:
-            if event.confidence.value < self._min_event_confidence:
+            event_confidence = event.confidence
+            if event_confidence is None:
+                unavailable_confidence += 1
+                if self._min_event_confidence > 0.0:
+                    unavailable_confidence_rejections += 1
+                    continue
+            elif event_confidence.value < self._min_event_confidence:
                 low_confidence_rejections += 1
                 continue
+
             if cursor >= len(self._score_events):
                 unmatched += 1
                 continue
@@ -89,7 +98,7 @@ class CausalSymbolicFollower:
                     score_beat=score_event.score_beat,
                     emitted_at_s=event.observed_at_s,
                     backend=self.backend_name,
-                    confidence=event.confidence.value,
+                    confidence=None if event_confidence is None else event_confidence.value,
                 )
             )
             alignment_path.append(
@@ -112,8 +121,10 @@ class CausalSymbolicFollower:
                 "unmatched_observations": unmatched,
                 "skipped_score_events": skipped_score_events,
                 "low_confidence_rejections": low_confidence_rejections,
+                "unavailable_confidence": unavailable_confidence,
+                "unavailable_confidence_rejections": unavailable_confidence_rejections,
                 "lookahead_events": self._lookahead_events,
                 "min_event_confidence": self._min_event_confidence,
-                "confidence_semantics": "propagated_from_transcription_event",
+                "confidence_semantics": "propagated_when_available_otherwise_unavailable",
             },
         )

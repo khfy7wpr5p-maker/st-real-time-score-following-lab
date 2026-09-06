@@ -1,0 +1,38 @@
+{
+  "schema": "st.dataset_candidate_manifest.v1",
+  "name": "STRAdi violin research candidate",
+  "status": "not_materialized_license_review_required_for_assets_and_example_audio",
+  "checked_at": "2026-09-06",
+  "source_repository": "https://github.com/seingreen/STRAdi",
+  "source_code": {
+    "license": "Apache-2.0",
+    "license_status": "verified_from_repository_LICENSE",
+    "materialized_in_st_repo": false
+  },
+  "checkpoints": {
+    "release": "v1.0.0",
+    "online_name": "violin_transcription_online.pth",
+    "offline_name": "violin_transcription_offline.pth",
+    "license_status": "needs_explicit_confirmation_before_materialization",
+    "reason": "README explicitly labels source code Apache-2.0 but does not separately state checkpoint asset terms.",
+    "downloaded": false,
+    "sha256": null
+  },
+  "example_audio": {
+    "description": "60-second KRAISLER excerpt referenced by STRAdi",
+    "license_status": "subject_to_KRAISLER_dataset_terms",
+    "downloaded_or_copied": false,
+    "sha256": null
+  },
+  "full_training_evaluation_data": {
+    "included_by_stradi": false,
+    "training_sources_reported": ["MUSC", "MOSA violin portion"]
+  },
+  "st_policy": {
+    "allow_source_interface_research": true,
+    "allow_synthetic_csv_fixture": true,
+    "allow_checkpoint_materialization": false,
+    "allow_kraisler_audio_materialization": false,
+    "next_human_gate": "Confirm checkpoint asset terms and KRAISLER/example-audio usage rights before acquisition."
+  }
+}
