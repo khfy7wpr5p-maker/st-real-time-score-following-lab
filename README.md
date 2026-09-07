@@ -4,7 +4,7 @@ Research infrastructure for low-latency alignment of live audio/MIDI performance
 
 ## Near-term target
 
-Produce benchmarkable `score position + tempo + confidence` from simulated or live streams while keeping follower algorithms replaceable, then turn validated alignment evidence into auditable post-performance analysis.
+Produce benchmarkable `score position + tempo + confidence` from simulated or live streams while keeping follower algorithms replaceable, then turn validated alignment evidence into auditable post-performance analysis and evidence-first performance intelligence.
 
 ## Design rules
 
@@ -17,7 +17,7 @@ Produce benchmarkable `score position + tempo + confidence` from simulated or li
 
 ## Current stage
 
-**SF-07 Performance Alignment is complete for repository-owned deterministic post-performance evidence. SF-08 Performance Error Intelligence Foundation is the next autonomous stage.**
+**SF-08 Performance Error Intelligence Foundation is complete for repository-owned deterministic evidence. SF-09 Duet Research is the next autonomous stage.**
 
 Completed permanent evidence currently covers:
 - SF-01 Matchmaker synthetic MIDI baseline;
@@ -25,7 +25,8 @@ Completed permanent evidence currently covers:
 - SF-03 direct-audio vs synthetic-oracle symbolic following;
 - SF-05 classical-guitar structural synthetic comparison;
 - SF-06 robustness/recovery perturbation suite;
-- SF-07 post-performance alignment, segmentation, timing/tempo summaries and JSON/CSV export.
+- SF-07 post-performance alignment, segmentation, timing/tempo summaries and JSON/CSV export;
+- SF-08 evidence-first performance deviation events, abstention contracts and JSON/CSV export.
 
 SF-04 Solo Violin remains a narrow real-evidence rights gate and does not block independent stages.
 
@@ -37,10 +38,11 @@ Evidence reports:
 - `benchmarks/reports/SF05_CLASSICAL_GUITAR.md`
 - `benchmarks/reports/SF06_ROBUSTNESS_RECOVERY.md`
 - `benchmarks/reports/SF07_PERFORMANCE_ALIGNMENT.md`
+- `benchmarks/reports/SF08_ERROR_INTELLIGENCE.md`
 
 ## Roadmap
 
-SF-00 foundation -> SF-01 Matchmaker baseline -> SF-02 realtime streaming -> SF-03 symbolic following -> SF-04 solo violin -> SF-05 classical guitar -> SF-06 robustness/recovery -> SF-07 performance alignment -> SF-08 performance error intelligence -> duet/multi-channel ensemble -> orchestra research -> production candidate extraction.
+SF-00 foundation -> SF-01 Matchmaker baseline -> SF-02 realtime streaming -> SF-03 symbolic following -> SF-04 solo violin -> SF-05 classical guitar -> SF-06 robustness/recovery -> SF-07 performance alignment -> SF-08 performance error intelligence -> SF-09 duet -> SF-10 quartet/multi-channel ensemble -> mixed ensemble/orchestra research -> production candidate extraction.
 
 ## Development
 
@@ -66,6 +68,7 @@ To reproduce repository-owned autonomous research benchmarks without Matchmaker:
 ```bash
 python benchmarks/run_recovery_suite.py
 python benchmarks/run_performance_alignment.py
+python benchmarks/run_error_intelligence.py
 ```
 
 Matchmaker 0.3.0 is evaluated only through an adapter and is not the ST runtime authority.

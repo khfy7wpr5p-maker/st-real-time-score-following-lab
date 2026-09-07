@@ -12,7 +12,8 @@ Date: 2026-09-07
 - SF-05 Classical Guitar: **complete for repository-owned structural synthetic evidence; real-corpus validation remains rights-gated**.
 - SF-06 Robustness and Recovery: **complete for repository-owned deterministic symbolic recovery evidence**.
 - SF-07 Performance Alignment: **complete for repository-owned deterministic post-performance analysis/export evidence**.
-- SF-08 Performance Error Intelligence Foundation: **next active autonomous stage**.
+- SF-08 Performance Error Intelligence Foundation: **complete for repository-owned deterministic evidence-first error/deviation intelligence**.
+- SF-09 Duet Research: **next active autonomous stage**.
 
 ## SF-04 narrow gate
 
@@ -67,6 +68,22 @@ Missing confidence remains null/blank in exports rather than being fabricated. T
 
 See `benchmarks/reports/SF07_PERFORMANCE_ALIGNMENT.md` and `docs/SF07_PERFORMANCE_ALIGNMENT.md`.
 
+## SF-08 evidence
+
+SF-08 adds an evidence-first performance error/deviation layer over SF-06 recovery and SF-07 alignment records. It explicitly separates measured/derived evidence from unsupported musical or pedagogical interpretation.
+
+Implementation CI `34105618113` passed all 6 jobs: Python 3.11/3.12 Ruff + full pytest, recovery, performance alignment, error intelligence and the complete Matchmaker regression chain.
+
+Repository-owned deterministic evidence:
+- 6 observations -> 5 accepted alignment points;
+- 5 evidence events: one timing-late (~80 ms), one performance gap, one score discontinuity, one unmatched observation and one one-event skipped score region;
+- unmatched event identity is safely reconciled to `event-unmatched` at 0.25 s when the original observation stream makes that identity provable;
+- 2 evidence events retain source confidence provenance and 3 keep confidence unavailable;
+- 6 explicit abstentions cover unsupported pitch-error identity, unmatched semantics, articulation, dynamics, musical intent and pedagogical grading;
+- no grade or severity score is produced.
+
+See `benchmarks/reports/SF08_ERROR_INTELLIGENCE.md` and `docs/SF08_ERROR_INTELLIGENCE.md`.
+
 ## Current autonomous direction
 
-Proceed to SF-08 Performance Error Intelligence Foundation. Build on SF-07 records to define evidence-backed, non-authoritative error/deviation events and aggregation contracts while preserving confidence provenance, abstention, auditability, and the boundary between measured performance facts and pedagogical interpretation.
+Proceed to SF-09 Duet Research. Establish ST-owned multi-performer/part observation and alignment contracts, deterministic two-part score/performance fixtures, per-part versus shared-position evidence, timing-asynchrony measurements, fail-soft behavior when one performer drops or diverges, and explicit confidence/provenance without prematurely generalizing duet evidence to quartet/orchestra authority.
