@@ -162,7 +162,9 @@ def _missing_note() -> RecoveryScenario:
         items=items,
         perturbation_time_s=2.5,
         recovery_target_event_id="missing-6",
-        fail_soft_policy="Permit a bounded forward skip when the next observed pitch is unambiguous.",
+        fail_soft_policy=(
+            "Permit a bounded forward skip when the next observed pitch is unambiguous."
+        ),
     )
 
 
@@ -195,7 +197,10 @@ def _pause() -> RecoveryScenario:
 
 
 def _restart() -> RecoveryScenario:
-    items = [(_score_event(f"restart-pre-{index}", index, index * 0.5), index) for index in range(10)]
+    items = [
+        (_score_event(f"restart-pre-{index}", index, index * 0.5), index)
+        for index in range(10)
+    ]
     items.extend(
         (_score_event(f"restart-new-{index}", index, 7.0 + index * 0.5), index)
         for index in range(16)
@@ -206,12 +211,18 @@ def _restart() -> RecoveryScenario:
         items=items,
         perturbation_time_s=7.0,
         recovery_target_event_id="restart-new-0",
-        fail_soft_policy="After a long gap, permit explicit global re-lock instead of forcing monotonic advance.",
+        fail_soft_policy=(
+            "After a long gap, permit explicit global re-lock instead of forcing "
+            "monotonic advance."
+        ),
     )
 
 
 def _repeat() -> RecoveryScenario:
-    items = [(_score_event(f"repeat-pre-{index}", index, index * 0.5), index) for index in range(12)]
+    items = [
+        (_score_event(f"repeat-pre-{index}", index, index * 0.5), index)
+        for index in range(12)
+    ]
     items.extend(
         (_score_event(f"repeat-loop-{index}", index, 6.0 + (index - 4) * 0.5), index)
         for index in range(4, 8)
@@ -242,7 +253,9 @@ def _skip() -> RecoveryScenario:
         items=items,
         perturbation_time_s=3.0,
         recovery_target_event_id="skip-post-10",
-        fail_soft_policy="Permit a bounded forward jump and record skipped score events explicitly.",
+        fail_soft_policy=(
+            "Permit a bounded forward jump and record skipped score events explicitly."
+        ),
     )
 
 
@@ -260,7 +273,9 @@ def _backward_jump() -> RecoveryScenario:
         items=items,
         perturbation_time_s=5.5,
         recovery_target_event_id="backward-post-7",
-        fail_soft_policy="Permit bounded backward re-lock and expose the discontinuity in audit metrics.",
+        fail_soft_policy=(
+            "Permit bounded backward re-lock and expose the discontinuity in audit metrics."
+        ),
     )
 
 
@@ -278,7 +293,9 @@ def _tempo_change() -> RecoveryScenario:
         items=items,
         perturbation_time_s=target_time,
         recovery_target_event_id="tempo-8",
-        fail_soft_policy="Keep position matching causal and avoid forcing a fixed performance clock.",
+        fail_soft_policy=(
+            "Keep position matching causal and avoid forcing a fixed performance clock."
+        ),
     )
 
 
