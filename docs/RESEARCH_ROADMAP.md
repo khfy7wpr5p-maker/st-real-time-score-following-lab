@@ -9,8 +9,8 @@
 | SF-04 | Solo violin | Active external-evidence gate — STRAdi interface/preflight autonomous; real asset/audio evidence rights-gated |
 | SF-05 | Classical guitar | Complete — repository-owned structural synthetic baseline + evidence; real corpus validation rights-gated |
 | SF-06 | Robustness and recovery | Complete — 11-scenario deterministic recovery suite + evidence |
-| SF-07 | Performance alignment | Active — autonomous next stage |
-| SF-08 | Performance error intelligence foundation | Planned |
+| SF-07 | Performance alignment | Complete — post-performance analysis/export contracts + CI evidence |
+| SF-08 | Performance error intelligence foundation | Active — next autonomous stage |
 | SF-09 | Duet research | Planned |
 | SF-10 | Quartet / multi-channel ensemble | Planned |
 | SF-11 | Mixed ensemble | Planned |
@@ -20,7 +20,7 @@
 
 ## Completed evidence
 
-SF-01, SF-02, SF-03, SF-05, and SF-06 have permanent reports under `benchmarks/reports/`.
+SF-01, SF-02, SF-03, SF-05, SF-06, and SF-07 have permanent reports under `benchmarks/reports/`.
 
 ## SF-04 narrow external-evidence gate
 
@@ -49,12 +49,23 @@ SF-04 remains incomplete until real violin research evidence is reproducible, bu
 5. Re-lock metrics are defined on the synthetic performance timeline and are not mislabeled as CPU latency.
 6. Failure taxonomy, fail-soft policy, and per-match audit records are retained in benchmark output.
 
-## SF-07 active plan
+## SF-07 completed performance-alignment baseline
 
-1. Define ST-owned post-performance alignment/export contracts with optional confidence and provenance.
-2. Convert follower alignment paths into score-time/performance-time deviation records.
-3. Estimate local tempo only inside valid forward-moving segments; discontinuities such as repeats/backward jumps must start new segments rather than yield negative or meaningless BPM.
-4. Summarize absolute timing deviation, early/late/on-time counts, and segment tempo statistics.
-5. Export stable JSON and CSV suitable for rehearsal review and later pedagogy/error-intelligence layers.
-6. Add repository-owned regression cases for clean tempo, expressive deviation, pause, and backward/repeat discontinuities.
-7. Publish permanent evidence before advancing to SF-08.
+1. ST-owned post-performance records preserve backend/method/input provenance and optional confidence.
+2. Alignment paths are converted to score-time/performance-time, absolute offset, segment-relative deviation and timing classes.
+3. Local tempo is computed only within valid forward-moving segments.
+4. Pause gaps and non-forward score movement start explicit new segments, preventing bogus cross-boundary BPM.
+5. Stable JSON and CSV exports retain missing confidence as missing.
+6. Repository-owned clean, expressive, pause and backward-jump cases passed the independent benchmark.
+7. CI `34103541246` passed Python 3.11/3.12, recovery, performance-alignment and the Matchmaker regression chain.
+8. Permanent evidence is recorded in `benchmarks/reports/SF07_PERFORMANCE_ALIGNMENT.md`.
+
+## SF-08 active plan
+
+1. Define ST-owned performance error/deviation event contracts that distinguish measured facts from pedagogical interpretation.
+2. Start with evidence available from current symbolic/alignment paths: timing deviation, unmatched/extra observations, skipped score regions, discontinuities and confidence provenance.
+3. Preserve abstention when the system lacks sufficient evidence; do not transform unavailable confidence into certainty.
+4. Add aggregation suitable for rehearsal review without turning research heuristics into grading authority.
+5. Build deterministic repository-owned fixtures and failure taxonomy before considering model-based error intelligence.
+6. Keep future pitch/articulation/dynamics intelligence modular so SF-08 does not hardwire one transcription model.
+7. Publish permanent evidence before advancing to SF-09 duet research.

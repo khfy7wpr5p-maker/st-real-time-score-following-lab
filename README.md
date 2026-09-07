@@ -4,7 +4,7 @@ Research infrastructure for low-latency alignment of live audio/MIDI performance
 
 ## Near-term target
 
-Produce benchmarkable `score position + tempo + confidence` from simulated or live streams while keeping follower algorithms replaceable.
+Produce benchmarkable `score position + tempo + confidence` from simulated or live streams while keeping follower algorithms replaceable, then turn validated alignment evidence into auditable post-performance analysis.
 
 ## Design rules
 
@@ -17,21 +17,30 @@ Produce benchmarkable `score position + tempo + confidence` from simulated or li
 
 ## Current stage
 
-**SF-03 — Symbolic Following Path is complete for the repository-owned synthetic comparison scope. SF-04 Solo Violin is next.**
+**SF-07 Performance Alignment is complete for repository-owned deterministic post-performance evidence. SF-08 Performance Error Intelligence Foundation is the next autonomous stage.**
 
-SF-00 through SF-03 are CI-validated. SF-03 adds a backend-neutral transcription boundary and ST-owned causal symbolic follower, then compares direct audio-only alignment against a benchmark-only oracle transcription path on the same 16-note score material.
+Completed permanent evidence currently covers:
+- SF-01 Matchmaker synthetic MIDI baseline;
+- SF-02 bounded realtime MIDI/PCM streaming;
+- SF-03 direct-audio vs synthetic-oracle symbolic following;
+- SF-05 classical-guitar structural synthetic comparison;
+- SF-06 robustness/recovery perturbation suite;
+- SF-07 post-performance alignment, segmentation, timing/tempo summaries and JSON/CSV export.
 
-Final SF-03 run `34058190673` passed Python 3.11/3.12 plus all Matchmaker integration and benchmark steps. Audio-only mean absolute onset error was 20.833 ms with P95 333.333 ms; the perfect oracle symbolic path was 0 ms across all 16 expected events. The oracle result is an architecture upper bound only and is not AMT-model evidence.
+SF-04 Solo Violin remains a narrow real-evidence rights gate and does not block independent stages.
 
 Evidence reports:
 
 - `benchmarks/reports/SF01_MATCHMAKER_SYNTHETIC_MIDI.md`
 - `benchmarks/reports/SF02_REALTIME_STREAMING.md`
 - `benchmarks/reports/SF03_SYMBOLIC_COMPARISON.md`
+- `benchmarks/reports/SF05_CLASSICAL_GUITAR.md`
+- `benchmarks/reports/SF06_ROBUSTNESS_RECOVERY.md`
+- `benchmarks/reports/SF07_PERFORMANCE_ALIGNMENT.md`
 
 ## Roadmap
 
-SF-00 foundation -> SF-01 Matchmaker baseline -> SF-02 realtime streaming -> SF-03 symbolic following -> SF-04 solo violin -> SF-05 classical guitar -> robustness/recovery -> performance alignment -> ensemble/orchestra research -> production candidate extraction.
+SF-00 foundation -> SF-01 Matchmaker baseline -> SF-02 realtime streaming -> SF-03 symbolic following -> SF-04 solo violin -> SF-05 classical guitar -> SF-06 robustness/recovery -> SF-07 performance alignment -> SF-08 performance error intelligence -> duet/multi-channel ensemble -> orchestra research -> production candidate extraction.
 
 ## Development
 
@@ -49,6 +58,14 @@ python benchmarks/run_matchmaker_baseline.py
 python benchmarks/run_matchmaker_streaming_smoke.py
 python benchmarks/run_matchmaker_audio_streaming_smoke.py
 python benchmarks/run_symbolic_comparison.py
+python benchmarks/run_guitar_baseline.py
+```
+
+To reproduce repository-owned autonomous research benchmarks without Matchmaker:
+
+```bash
+python benchmarks/run_recovery_suite.py
+python benchmarks/run_performance_alignment.py
 ```
 
 Matchmaker 0.3.0 is evaluated only through an adapter and is not the ST runtime authority.

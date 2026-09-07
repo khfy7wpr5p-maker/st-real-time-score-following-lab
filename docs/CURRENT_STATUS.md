@@ -11,7 +11,8 @@ Date: 2026-09-07
 - SF-04 Solo Violin: **active external-evidence gate; autonomous STRAdi interface/preflight implemented, real model/data evidence gated by asset/audio usage confirmation**.
 - SF-05 Classical Guitar: **complete for repository-owned structural synthetic evidence; real-corpus validation remains rights-gated**.
 - SF-06 Robustness and Recovery: **complete for repository-owned deterministic symbolic recovery evidence**.
-- SF-07 Performance Alignment: **next active autonomous stage**.
+- SF-07 Performance Alignment: **complete for repository-owned deterministic post-performance analysis/export evidence**.
+- SF-08 Performance Error Intelligence Foundation: **next active autonomous stage**.
 
 ## SF-04 narrow gate
 
@@ -50,6 +51,22 @@ Evidence:
 
 See `benchmarks/reports/SF06_ROBUSTNESS_RECOVERY.md` and `docs/SF06_ROBUSTNESS_RECOVERY.md`.
 
+## SF-07 evidence
+
+SF-07 adds ST-owned post-performance alignment records with explicit provenance and optional confidence, plus stable JSON/CSV export.
+
+Final implementation CI `34103541246` passed Python 3.11/3.12 Ruff + full pytest, the independent performance-alignment benchmark, SF-06 recovery regression, and the full Matchmaker/SF-01/SF-02/SF-03/SF-05 regression chain.
+
+Repository-owned benchmark evidence at 120 BPM / 40 ms timing tolerance:
+- clean: 8 points, 1 segment, 8/8 on-time, 7 local-tempo samples at 120 BPM;
+- expressive: 6 points, 1 early / 3 on-time / 2 late, mean absolute segment deviation 36.667 ms, P95 90 ms, local-tempo range about 98.361–146.341 BPM;
+- pause: 5 points, 2 segments, one explicit performance-gap boundary, no tempo estimate across the pause;
+- backward jump: 6 points, 2 segments, one explicit score-discontinuity boundary, no negative/cross-boundary tempo.
+
+Missing confidence remains null/blank in exports rather than being fabricated. These are deterministic post-processing fixtures and are not real musician performance-quality claims.
+
+See `benchmarks/reports/SF07_PERFORMANCE_ALIGNMENT.md` and `docs/SF07_PERFORMANCE_ALIGNMENT.md`.
+
 ## Current autonomous direction
 
-Proceed to SF-07 performance alignment: convert follower paths into post-performance alignment records, derive deviation and local-tempo summaries without producing invalid tempo across discontinuities, and export stable JSON/CSV evidence with explicit provenance and optional confidence.
+Proceed to SF-08 Performance Error Intelligence Foundation. Build on SF-07 records to define evidence-backed, non-authoritative error/deviation events and aggregation contracts while preserving confidence provenance, abstention, auditability, and the boundary between measured performance facts and pedagogical interpretation.
