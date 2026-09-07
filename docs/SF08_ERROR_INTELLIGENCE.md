@@ -45,6 +45,8 @@ An unmatched recovery observation is evidence that the recovery follower did not
 
 SF-08 therefore emits `unmatched_observation` and an explicit `unmatched_observation_semantics` abstention.
 
+When the original `PerformanceEventV1` observation stream is supplied and the recovery run has no confidence-based rejections, SF-08 reconciles matched event IDs against the observation stream and emits event-level unmatched evidence with the original timestamp and confidence provenance. If identity cannot be reconciled safely, it falls back to aggregate unmatched evidence rather than guessing.
+
 ## Skipped score regions
 
 A `forward_skip` recovery audit transition can support a derived skipped-score-region event. SF-08 records the skipped score-index interval and count. It does not claim why the region was skipped.

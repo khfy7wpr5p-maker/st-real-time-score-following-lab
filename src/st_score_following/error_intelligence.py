@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import csv
 import json
-from collections.abc import Mapping
+from collections.abc import Iterable, Mapping
 from dataclasses import asdict, dataclass, field
 from enum import StrEnum
 from io import StringIO
@@ -10,7 +10,7 @@ from math import isfinite
 from statistics import mean
 from typing import Any
 
-from .contracts import ConfidenceV1
+from .contracts import ConfidenceV1, PerformanceEventV1
 from .followers.base import FollowerRunResult
 from .performance_alignment import (
     PerformanceAlignmentReportV1,
@@ -356,6 +356,7 @@ def build_performance_error_intelligence_report(
     alignment_report: PerformanceAlignmentReportV1,
     *,
     recovery_result: FollowerRunResult | None = None,
+    observations: Iterable[PerformanceEventV1] | None = None,
 ) -> PerformanceErrorIntelligenceReportV1:
     events: list[PerformanceEvidenceEventV1] = []
     counter = 0
@@ -415,22 +416,59 @@ def build_performance_error_intelligence_report(
     recovery_backend = None
     if recovery_result is not None:
         recovery_backend = recovery_result.backend
+        matches = _recovery_matches(recovery_result)
         unmatched_count = _non_negative_int_metric(
             recovery_result,
             "unmatched_observations",
         )
         if unmatched_count:
-            add_event(
-                kind=EvidenceKind.UNMATCHED_OBSERVATION,
-                origin=EvidenceOrigin.RECOVERY_AUDIT,
-                source_reference=(
-                    f"recovery:{recovery_result.backend}:unmatched_observations"
-                ),
-                count=unmatched_count,
+            observation_tuple = tuple(observations) if observations is not None else ()
+            low_confidence_rejections = _non_negative_int_metric(
+                recovery_result,
+                "low_confidence_rejections",
             )
+            unavailable_confidence_rejections = _non_negative_int_metric(
+                recovery_result,
+                "unavailable_confidence_rejections",
+            )
+            can_resolve_event_identity = (
+                bool(observation_tuple)
+                and low_confidence_rejections == 0
+                and unavailable_confidence_rejections == 0
+            )
+            if can_resolve_event_identity:
+                observation_ids = [event.event_id for event in observation_tuple]
+                if len(set(observation_ids)) != len(observation_ids):
+                    raise ValueError("observation event_id values must be unique")
+                matched_ids = {_required_text(record, "event_id") for record in matches}
+                unmatched_events = tuple(
+                    event for event in observation_tuple if event.event_id not in matched_ids
+                )
+                if len(unmatched_events) != unmatched_count:
+                    raise ValueError(
+                        "observation stream does not reconcile with recovery unmatched count"
+                    )
+                for event in unmatched_events:
+                    add_event(
+                        kind=EvidenceKind.UNMATCHED_OBSERVATION,
+                        origin=EvidenceOrigin.RECOVERY_AUDIT,
+                        source_reference=f"recovery:event:{event.event_id}",
+                        performance_time_s=event.observed_at_s,
+                        count=1,
+                        confidence=event.confidence,
+                    )
+            else:
+                add_event(
+                    kind=EvidenceKind.UNMATCHED_OBSERVATION,
+                    origin=EvidenceOrigin.RECOVERY_AUDIT,
+                    source_reference=(
+                        f"recovery:{recovery_result.backend}:unmatched_observations"
+                    ),
+                    count=unmatched_count,
+                )
 
         previous_score_index: int | None = None
-        for record in _recovery_matches(recovery_result):
+        for record in matches:
             score_index = _required_int(record, "score_index")
             transition = _required_text(record, "transition")
             event_id = _required_text(record, "event_id")

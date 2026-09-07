@@ -65,6 +65,7 @@ def run() -> dict[str, object]:
     report = build_performance_error_intelligence_report(
         alignment,
         recovery_result=recovery,
+        observations=events,
     )
     return {
         "schema": "st.score_following.error_intelligence_benchmark.v1",

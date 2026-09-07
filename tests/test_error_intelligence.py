@@ -70,6 +70,7 @@ def _fixture_report():
     return build_performance_error_intelligence_report(
         alignment,
         recovery_result=recovery,
+        observations=events,
     )
 
 
@@ -94,7 +95,8 @@ def test_unmatched_observation_is_not_promoted_to_wrong_or_extra_note() -> None:
     )
 
     assert unmatched.count == 1
-    assert unmatched.performance_time_s is None
+    assert unmatched.performance_time_s == pytest.approx(0.25)
+    assert unmatched.source_reference == "recovery:event:event-unmatched"
     assert any(
         item.kind is AbstentionKind.UNMATCHED_OBSERVATION_SEMANTICS
         for item in report.abstentions
