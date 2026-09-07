@@ -10,6 +10,16 @@ from .contracts import (
     ScorePositionV1,
     TempoStateV1,
 )
+from .error_intelligence import (
+    AbstentionKind,
+    EvidenceAbstentionV1,
+    EvidenceKind,
+    EvidenceOrigin,
+    PerformanceErrorIntelligenceReportV1,
+    PerformanceErrorIntelligenceSummaryV1,
+    PerformanceEvidenceEventV1,
+    build_performance_error_intelligence_report,
+)
 from .integrations import StradiCsvOutputAdapter
 from .performance_alignment import (
     AlignmentProvenanceV1,
@@ -25,10 +35,14 @@ from .symbolic import CausalSymbolicFollower, SymbolicScoreEvent
 from .transcription import TranscriptionAdapter, TranscriptionRunResult
 
 __all__ = [
+    "AbstentionKind",
     "AlignmentProvenanceV1",
     "AlignmentV1",
     "CausalSymbolicFollower",
     "ConfidenceV1",
+    "EvidenceAbstentionV1",
+    "EvidenceKind",
+    "EvidenceOrigin",
     "LatencySample",
     "LatencySummary",
     "ObservationKind",
@@ -36,6 +50,9 @@ __all__ = [
     "PerformanceAlignmentPointV1",
     "PerformanceAlignmentReportV1",
     "PerformanceAlignmentSummaryV1",
+    "PerformanceErrorIntelligenceReportV1",
+    "PerformanceErrorIntelligenceSummaryV1",
+    "PerformanceEvidenceEventV1",
     "PerformanceEventV1",
     "RecoveryAwareSymbolicFollower",
     "RecoveryMatch",
@@ -49,5 +66,6 @@ __all__ = [
     "TranscriptionAdapter",
     "TranscriptionRunResult",
     "build_performance_alignment_report",
+    "build_performance_error_intelligence_report",
     "summarize_latency_s",
 ]
