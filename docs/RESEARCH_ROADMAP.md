@@ -10,8 +10,8 @@
 | SF-05 | Classical guitar | Complete — repository-owned structural synthetic baseline + evidence; real corpus validation rights-gated |
 | SF-06 | Robustness and recovery | Complete — 11-scenario deterministic recovery suite + evidence |
 | SF-07 | Performance alignment | Complete — post-performance analysis/export contracts + CI evidence |
-| SF-08 | Performance error intelligence foundation | Active — next autonomous stage |
-| SF-09 | Duet research | Planned |
+| SF-08 | Performance error intelligence foundation | Complete — evidence taxonomy, abstention contracts + CI evidence |
+| SF-09 | Duet research | Active — next autonomous stage |
 | SF-10 | Quartet / multi-channel ensemble | Planned |
 | SF-11 | Mixed ensemble | Planned |
 | SF-12 | Orchestra global score following | Planned |
@@ -20,7 +20,7 @@
 
 ## Completed evidence
 
-SF-01, SF-02, SF-03, SF-05, SF-06, and SF-07 have permanent reports under `benchmarks/reports/`.
+SF-01, SF-02, SF-03, SF-05, SF-06, SF-07, and SF-08 have permanent reports under `benchmarks/reports/`.
 
 ## SF-04 narrow external-evidence gate
 
@@ -60,12 +60,25 @@ SF-04 remains incomplete until real violin research evidence is reproducible, bu
 7. CI `34103541246` passed Python 3.11/3.12, recovery, performance-alignment and the Matchmaker regression chain.
 8. Permanent evidence is recorded in `benchmarks/reports/SF07_PERFORMANCE_ALIGNMENT.md`.
 
-## SF-08 active plan
+## SF-08 completed evidence-first error-intelligence baseline
 
-1. Define ST-owned performance error/deviation event contracts that distinguish measured facts from pedagogical interpretation.
-2. Start with evidence available from current symbolic/alignment paths: timing deviation, unmatched/extra observations, skipped score regions, discontinuities and confidence provenance.
-3. Preserve abstention when the system lacks sufficient evidence; do not transform unavailable confidence into certainty.
-4. Add aggregation suitable for rehearsal review without turning research heuristics into grading authority.
-5. Build deterministic repository-owned fixtures and failure taxonomy before considering model-based error intelligence.
-6. Keep future pitch/articulation/dynamics intelligence modular so SF-08 does not hardwire one transcription model.
-7. Publish permanent evidence before advancing to SF-09 duet research.
+1. ST-owned evidence contracts separate measured/derived performance facts from unsupported pedagogical interpretation.
+2. Initial evidence kinds cover timing early/late, unmatched observations, skipped score regions, score discontinuities and performance gaps.
+3. Unsupported pitch-error identity, unmatched semantics, articulation, dynamics, musical intent and grading remain explicit abstentions.
+4. Original `ConfidenceV1` provenance is retained when available; missing confidence remains missing and naked scalar recovery confidence is not promoted into calibrated provenance.
+5. When source observations safely reconcile with recovery match IDs, unmatched evidence retains exact event ID and performance timestamp; otherwise the layer falls back to aggregate evidence rather than guessing.
+6. Repository-owned benchmark emits 5 evidence events and 6 abstentions from a deterministic 6-observation fixture, including one ~80 ms timing-late event, one unmatched event, one skipped score event and two boundary events.
+7. No severity score, student grade or pedagogical authority is emitted.
+8. CI `34105618113` passed all 6 jobs including Python 3.11/3.12, recovery, performance alignment, SF-08 benchmark and the Matchmaker regression chain.
+9. Permanent evidence is recorded in `benchmarks/reports/SF08_ERROR_INTELLIGENCE.md`.
+
+## SF-09 active plan
+
+1. Define ST-owned duet/performer/part identity contracts without changing single-performer source-of-truth contracts.
+2. Build deterministic repository-owned two-part score and symbolic performance fixtures before using external duet corpora.
+3. Evaluate per-part alignment plus a shared global score-position representation; do not assume either is authoritative without evidence.
+4. Measure inter-part onset asynchrony and local timing divergence with explicit clocks and provenance.
+5. Add fail-soft cases where one performer pauses, drops observations, advances or diverges while the other remains aligned.
+6. Preserve missing confidence and abstention semantics independently for each performer/part.
+7. Keep duet evidence isolated from quartet/orchestra claims; SF-10+ must earn their own multi-channel evidence.
+8. Publish permanent duet evidence before advancing to SF-10.
