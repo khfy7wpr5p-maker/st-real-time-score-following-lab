@@ -42,6 +42,22 @@ Reports include:
 
 `PerformanceAlignmentReportV1.to_json()` emits schema-versioned structured output with provenance. `to_csv()` emits one row per alignment point and leaves unavailable confidence fields blank.
 
+## Validation
+
+CI `34103541246` validated the implementation after a Ruff-only test formatting fix:
+- Python 3.11 and 3.12 Ruff + full pytest passed;
+- the independent SF-07 benchmark passed;
+- SF-06 recovery regression passed;
+- all Matchmaker integration and earlier benchmark regression steps passed.
+
+At 120 BPM with a 40 ms timing tolerance, deterministic benchmark cases produced:
+- clean: 8 points / 1 segment / 8 on-time / 120 BPM local intervals;
+- expressive: 1 early / 3 on-time / 2 late, 36.667 ms mean absolute segment deviation and 90 ms P95;
+- pause: one explicit performance-gap boundary and no tempo sample across the pause;
+- backward jump: one explicit score-discontinuity boundary and no negative/cross-boundary tempo.
+
+Permanent numeric evidence and limitations are in `benchmarks/reports/SF07_PERFORMANCE_ALIGNMENT.md`.
+
 ## Interpretation boundary
 
 SF-07 is a post-performance analysis/export layer. It does not infer pitch mistakes, articulation quality, dynamics, or musical intent. Local tempo is an interval estimate between adjacent aligned score beats, not a hidden ground-truth conductor tempo. Score-time conversion assumes the supplied score beat and reference BPM use the same beat unit.
