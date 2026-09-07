@@ -78,7 +78,12 @@ def _audio_result(score_path: Path, audio_path: Path, processor: str) -> dict[st
 
 
 def run() -> dict[str, object]:
-    score_path = Path(__file__).parents[1] / "tests" / "fixtures" / "synthetic_classical_guitar.musicxml"
+    score_path = (
+        Path(__file__).parents[1]
+        / "tests"
+        / "fixtures"
+        / "synthetic_classical_guitar.musicxml"
+    )
     audio = _render_fixture_audio(score_path)
 
     with TemporaryDirectory() as tmp_dir:
@@ -121,12 +126,21 @@ def run() -> dict[str, object]:
             "voice_overlap": "whole-measure bass overlaps upper-voice onsets",
         },
         "limitations": [
-            "The MusicXML encodes classical-guitar-range voicings and sustained bass overlap.",
-            "Audio is deterministic score synthesis, not a recorded nylon-string guitar performance.",
+            (
+                "The MusicXML encodes classical-guitar-range voicings and "
+                "sustained bass overlap."
+            ),
+            (
+                "Audio is deterministic score synthesis, not a recorded "
+                "nylon-string guitar performance."
+            ),
             "The symbolic path receives perfect note-level oracle events before onset clustering.",
             "Oracle symbolic results are an architecture upper bound, not AMT accuracy evidence.",
             "No GuitarSet/GAPS media were downloaded or redistributed for this benchmark.",
-            "Real classical-guitar timbre and performer variability remain external-validation work.",
+            (
+                "Real classical-guitar timbre and performer variability remain "
+                "external-validation work."
+            ),
         ],
     }
 
