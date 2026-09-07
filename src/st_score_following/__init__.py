@@ -11,6 +11,7 @@ from .contracts import (
     TempoStateV1,
 )
 from .integrations import StradiCsvOutputAdapter
+from .recovery import RecoveryAwareSymbolicFollower, RecoveryMatch
 from .symbolic import CausalSymbolicFollower, SymbolicScoreEvent
 from .transcription import TranscriptionAdapter, TranscriptionRunResult
 
@@ -23,6 +24,8 @@ __all__ = [
     "ObservationKind",
     "ObservationV1",
     "PerformanceEventV1",
+    "RecoveryAwareSymbolicFollower",
+    "RecoveryMatch",
     "ScorePositionV1",
     "StradiCsvOutputAdapter",
     "StreamClock",
