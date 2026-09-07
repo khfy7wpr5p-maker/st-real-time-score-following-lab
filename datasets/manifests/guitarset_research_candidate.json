@@ -1,0 +1,33 @@
+{
+  "schema": "st.dataset_candidate.v1",
+  "name": "GuitarSet",
+  "role": "future classical-guitar external validation",
+  "official_record": "https://zenodo.org/records/3371780",
+  "doi": "10.5281/zenodo.3371780",
+  "version": "1.1.0",
+  "status": "not_materialized_primary_license_confirmation_pending",
+  "known_scope": {
+    "recordings": 360,
+    "audio": true,
+    "annotations": [
+      "pitch_contours",
+      "string_fret_positions",
+      "chords",
+      "beats",
+      "downbeats",
+      "playing_style"
+    ]
+  },
+  "license_review": {
+    "official_repository_code_license": "MIT",
+    "dataset_primary_record_license": "not independently captured in current preflight",
+    "secondary_mirror_claim": "CC-BY-4.0",
+    "secondary_claim_is_not_used_as_authority": true
+  },
+  "materialization": {
+    "downloaded": false,
+    "committed": false,
+    "redistributed": false
+  },
+  "decision": "Use repository-owned synthetic guitar fixtures until primary dataset rights are recorded explicitly."
+}
