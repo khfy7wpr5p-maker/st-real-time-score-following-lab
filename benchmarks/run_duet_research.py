@@ -9,7 +9,6 @@ from st_score_following import (
     SymbolicScoreEvent,
 )
 
-
 PART_A_PITCHES = (60, 62, 64, 65, 67, 69, 71, 72)
 PART_B_PITCHES = (48, 50, 52, 53, 55, 57, 59, 60)
 
