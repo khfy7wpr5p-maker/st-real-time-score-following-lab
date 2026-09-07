@@ -64,7 +64,12 @@ def test_expressive_timing_is_classified_from_segment_relative_deviation() -> No
     assert TimingClass.EARLY in classes
     assert TimingClass.LATE in classes
     assert TimingClass.ON_TIME in classes
-    assert report.summary.early_count + report.summary.on_time_count + report.summary.late_count == 6
+    timing_count = (
+        report.summary.early_count
+        + report.summary.on_time_count
+        + report.summary.late_count
+    )
+    assert timing_count == 6
 
 
 def test_pause_starts_new_segment_and_avoids_bogus_slow_tempo_sample() -> None:
