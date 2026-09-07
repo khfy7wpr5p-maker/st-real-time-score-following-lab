@@ -8,9 +8,10 @@ Date: 2026-09-07
 - SF-01 Matchmaker Baseline Reproduction: **complete; CI + permanent evidence**.
 - SF-02 Realtime Microphone and Streaming Pipeline: **complete for repository-owned synthetic realtime evidence**.
 - SF-03 Symbolic Following Path: **complete; audio-vs-oracle-symbolic comparison + permanent evidence**.
-- SF-04 Solo Violin: **active; autonomous STRAdi interface/preflight implemented, real model/data evidence gated by asset/audio usage confirmation**.
+- SF-04 Solo Violin: **active external-evidence gate; autonomous STRAdi interface/preflight implemented, real model/data evidence gated by asset/audio usage confirmation**.
 - SF-05 Classical Guitar: **complete for repository-owned structural synthetic evidence; real-corpus validation remains rights-gated**.
-- SF-06 Robustness and Recovery: **next active autonomous stage**.
+- SF-06 Robustness and Recovery: **complete for repository-owned deterministic symbolic recovery evidence**.
+- SF-07 Performance Alignment: **next active autonomous stage**.
 
 ## SF-04 narrow gate
 
@@ -24,17 +25,31 @@ SF-04 is not globally blocking the roadmap; only its real violin evidence exit i
 
 The repository-owned classical-guitar fixture exercises 16 onset positions with 4 chord onsets, 12 arpeggio onsets under sustained whole-measure bass, and explicit voice overlap.
 
-Clean CI `34087889237` passed Python 3.11/3.12 Ruff + pytest, Matchmaker integrations, and all benchmark steps.
+Final SF-05 CI `34088140925` passed Python 3.11/3.12 Ruff + pytest, Matchmaker integrations, and all benchmark steps.
 
 On the deterministic synthetic fixture:
 - Matchmaker Arzt/chroma: 16/16 expected events, 0 ms mean/P95 onset error.
 - Matchmaker Arzt/CQT: 16/16 expected events, 0 ms mean/P95 onset error.
 - ST synthetic-oracle symbolic path: 16/16 expected events, 0 ms mean/P95 onset error.
 
-These results establish structural pipeline behavior only. They do not establish real nylon-string timbre robustness, real performer generalization or AMT accuracy.
+These results establish structural pipeline behavior only. They do not establish real nylon-string timbre robustness, real performer generalization, or AMT accuracy.
 
-See `benchmarks/reports/SF05_CLASSICAL_GUITAR_SYNTHETIC.md`, `docs/SF05_CLASSICAL_GUITAR.md`, and `datasets/manifests/guitarset_research_candidate.json`.
+## SF-06 evidence
+
+`RecoveryAwareSymbolicFollower` is a separate recovery backend with bounded forward/backward search and explicit global re-lock only for initial acquisition, long gaps, or configured mismatch recovery.
+
+The repository-owned suite contains clean control plus wrong note, missing note, extra note, pause, restart, repeat, skip, backward jump, tempo change, and rubato.
+
+Evidence:
+- 11/11 scenarios passed.
+- 188/188 valid event-to-score mappings correct.
+- 2/2 injected noise observations rejected.
+- one explicit global restart re-lock.
+- maximum declared re-lock: 2.0 s / 2 observations across aggregate dimensions; the 2.0 s is injected pause silence, not CPU latency.
+- every accepted match exposes an audit record; confidence is propagated only when available and never fabricated.
+
+See `benchmarks/reports/SF06_ROBUSTNESS_RECOVERY.md` and `docs/SF06_ROBUSTNESS_RECOVERY.md`.
 
 ## Current autonomous direction
 
-Proceed to SF-06 robustness/recovery with repository-owned perturbation scenarios: wrong/missing/extra notes, pause, restart, repeat, skip, backward jump, tempo change and rubato. Keep fail-soft behavior and recovery metrics explicit.
+Proceed to SF-07 performance alignment: convert follower paths into post-performance alignment records, derive deviation and local-tempo summaries without producing invalid tempo across discontinuities, and export stable JSON/CSV evidence with explicit provenance and optional confidence.
