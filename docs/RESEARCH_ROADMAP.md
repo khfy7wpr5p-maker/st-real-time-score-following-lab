@@ -12,15 +12,15 @@
 | SF-07 | Performance alignment | Complete — post-performance analysis/export contracts + CI evidence |
 | SF-08 | Performance error intelligence foundation | Complete — evidence taxonomy, abstention contracts + CI evidence |
 | SF-09 | Duet research | Complete — independent part following, derived shared position, asynchrony/fail-soft CI evidence |
-| SF-10 | Quartet / multi-channel ensemble | Active — next autonomous stage |
-| SF-11 | Mixed ensemble | Planned |
+| SF-10 | Quartet / multi-channel ensemble | Complete — 4-channel identity, 3-of-4 quorum, pairwise timing/fail-soft CI evidence |
+| SF-11 | Mixed ensemble | Active — next autonomous stage |
 | SF-12 | Orchestra global score following | Planned |
 | SF-13 | Orchestra section research | Planned |
 | SF-14 | Production candidate extraction | Planned |
 
 ## Completed evidence
 
-SF-01, SF-02, SF-03, SF-05, SF-06, SF-07, SF-08, and SF-09 have permanent reports under `benchmarks/reports/`.
+SF-01, SF-02, SF-03, SF-05, SF-06, SF-07, SF-08, SF-09, and SF-10 have permanent reports under `benchmarks/reports/`.
 
 ## SF-04 narrow external-evidence gate
 
@@ -85,13 +85,28 @@ SF-04 remains incomplete until real violin research evidence is reproducible, bu
 9. Authority remains `duet_research_not_ensemble_authority`; mono-mixture source separation, quartet/orchestra behavior, conductor intent and pedagogy remain unproven.
 10. Permanent evidence is recorded in `benchmarks/reports/SF09_DUET_RESEARCH.md`.
 
-## SF-10 active plan
+## SF-10 completed quartet / multi-channel baseline
 
-1. Generalize duet identity/aggregation into an N-part contract without weakening independent per-part alignment authority.
-2. Start with exactly four repository-owned symbolic channels and stable performer/part identities; do not claim mono-mixture separation.
-3. Define explicit quorum/coverage semantics for shared position when 1–N parts are stale, unavailable or divergent.
-4. Report distribution/spread of recent part positions rather than forcing consensus; keep shared confidence unavailable until a calibrated model exists.
-5. Measure pairwise and aggregate timing-asynchrony evidence with explicit provenance.
-6. Add deterministic fail-soft cases: one dropped channel/event, one paused performer, one divergent section and partial channel loss while remaining parts continue.
-7. Preserve SF-09 behavior as regression evidence and keep quartet/multi-channel claims isolated from SF-11 mixed-ensemble and SF-12 orchestra authority.
-8. Publish permanent SF-10 evidence before advancing.
+1. `QuartetPartInputV1` requires exactly four unique part, performer and channel identities.
+2. Every part runs through its own recovery follower; no shared state overwrites a part alignment.
+3. The default global-position quorum is 3 of 4 recent parts.
+4. Below quorum, `shared_score_beat` and spread remain null instead of being inferred from too few channels.
+5. Shared snapshots distinguish `full_consensus`, `quorum_consensus`, `divergent`, and `insufficient_quorum` while retaining stale/unavailable IDs and coverage.
+6. All six part pairs contribute signed/absolute timing-asynchrony evidence on common aligned score beats.
+7. Clean evidence produced 48 pairwise points and no divergence; dropped-event evidence localized one forward skip to part D; pause and advance cases exposed degraded/divergent states without corrupting unaffected part results.
+8. Two-channel-loss evidence produced 8 true post-bootstrap below-quorum snapshots with no shared position while the remaining A/B part followers continued independently.
+9. Shared confidence stays unavailable and is never synthesized from per-part recovery scalars.
+10. Implementation CI `34395555183` passed all 8 jobs, including Python 3.11/3.12, quartet/duet/recovery/performance/error-intelligence benchmarks and the full Matchmaker regression chain.
+11. Authority remains `quartet_multichannel_research_not_mixed_ensemble_authority`; mono-mixture source separation, arbitrary ensemble scaling, real-room generalization, conductor intent and pedagogy remain unproven.
+12. Permanent evidence is recorded in `benchmarks/reports/SF10_QUARTET_MULTICHANNEL.md`.
+
+## SF-11 active plan
+
+1. Add explicit heterogeneous instrument/observation-path identity without weakening independent part authority.
+2. Keep repository-owned evidence synthetic and channel-separated initially; do not imply source separation from a mono room recording.
+3. Compare mixed instrument-family timing/position evidence under a shared score while preserving source-specific provenance.
+4. Reuse quorum only after defining what constitutes eligible/recent evidence across heterogeneous observation paths.
+5. Keep shared confidence unavailable unless a calibrated combination method is independently validated.
+6. Add fail-soft cases where one instrument path pauses, drops events, or diverges while other paths continue.
+7. Preserve SF-09/SF-10 as regressions and isolate SF-11 claims from SF-12 orchestra authority.
+8. Publish permanent mixed-ensemble evidence before advancing.

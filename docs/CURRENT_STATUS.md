@@ -14,7 +14,8 @@ Date: 2026-09-09
 - SF-07 Performance Alignment: **complete for repository-owned deterministic post-performance analysis/export evidence**.
 - SF-08 Performance Error Intelligence Foundation: **complete for repository-owned deterministic evidence-first error/deviation intelligence**.
 - SF-09 Duet Research: **complete for repository-owned deterministic independent two-performer/part evidence**.
-- SF-10 Quartet / Multi-Channel Ensemble: **next active autonomous stage**.
+- SF-10 Quartet / Multi-Channel Ensemble: **complete for repository-owned deterministic independent four-channel evidence**.
+- SF-11 Mixed Ensemble: **next active autonomous stage**.
 
 ## SF-04 narrow gate
 
@@ -101,6 +102,23 @@ The clean 1-beat maximum snapshot spread is a transient event-arrival ordering e
 
 See `benchmarks/reports/SF09_DUET_RESEARCH.md` and `docs/SF09_DUET_RESEARCH.md`.
 
+## SF-10 evidence
+
+SF-10 preserves four independent recovery paths with stable part/performer/channel identity and introduces an explicit default 3-of-4 quorum for a derived quartet shared-position view. Below quorum, the global position is unavailable rather than inferred from too few channels.
+
+Implementation CI `34395555183` passed all 8 jobs: Python 3.11/3.12 Ruff + full pytest, quartet research, duet regression, recovery, performance alignment, error intelligence and the complete Matchmaker/SF-01/SF-02/SF-03/SF-05 regression chain.
+
+Repository-owned deterministic quartet evidence:
+- clean: all four parts 8/8 to beat 7; 48 pairwise timing points; 29 full-consensus snapshots, no divergence; maximum pairwise offset 50 ms;
+- one dropped part-D event: A/B/C remain 8/8, D=7 with one forward skip; all reach beat 7; no divergence;
+- one paused part C: all four still 8/8; C exposes one pause gap; 2 divergent and 2 true post-bootstrap below-quorum snapshots; maximum spread 3 beats;
+- one advancing part D: A/B/C remain 8/8; D=6 with two forward skips; 12 divergent snapshots; maximum spread 2 beats;
+- two-channel loss: A/B continue to beat 7 while C/D stop at beat 2; 8 true post-bootstrap insufficient-quorum snapshots publish no shared beat or spread.
+
+Shared confidence remains unavailable. Pairwise asynchrony and quorum loss are evidence, not performance grades. `authority_boundary` remains `quartet_multichannel_research_not_mixed_ensemble_authority`.
+
+See `benchmarks/reports/SF10_QUARTET_MULTICHANNEL.md` and `docs/SF10_QUARTET_MULTICHANNEL.md`.
+
 ## Current autonomous direction
 
-Proceed to SF-10 Quartet / Multi-Channel Ensemble. Generalize identity and aggregation only where SF-09 evidence supports it, preserve independent part authority, add N-part stale/divergence/quorum semantics, deterministic four-part fixtures and fail-soft partial-part behavior, and do not generalize multi-channel synthetic evidence to mono-mixture source separation or orchestra authority.
+Proceed to SF-11 Mixed Ensemble. Preserve independent source/part authority and the evidence-first quorum rules established by SF-09/SF-10. Introduce heterogeneous instrument/observation-path identity only where repository-owned evidence can validate it. Do not treat four symbolic channels as evidence for mono acoustic source separation, real-room mixed ensemble performance, conductor intent or orchestra behavior.
