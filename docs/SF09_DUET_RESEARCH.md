@@ -32,16 +32,30 @@ Shared snapshot confidence is unavailable in this stage. Per-part scalar recover
 
 Asynchrony is a timing fact, not a quality grade. Large values after a pause or deliberate divergence are not automatically interpreted as mistakes.
 
-## Fail-soft cases
+## Repository-owned evidence
 
-Repository-owned deterministic research covers:
+Implementation head CI `34394175788` passed all 7 jobs on `fa53b42c4f0826c2599ea2a99d39813f42eb1dd4` before the documentation-only closeout commit.
 
-- clean duet with a stable 20 ms part offset;
-- one dropped observation in part B;
-- a pause in part B while part A continues;
-- part B advancing/skipping score events while part A remains on its own path.
+Deterministic cases:
 
-The design requirement is that disruption in one part must not overwrite or invalidate the other part's independent alignment result.
+- **clean**: both parts match 8/8 events and end at score beat 7.0; 8 common asynchrony points; mean/max absolute asynchrony about 20 ms; 15 consensus, 1 single-part, 0 divergent snapshots.
+- **drop_one_event**: part A remains 8/8; part B matches 7 events and exposes one forward-skipped score event; both end at beat 7.0; 7 common asynchrony points; mean/max about 20 ms; 13 consensus, 2 single-part, 0 divergent snapshots.
+- **pause_one_performer**: both parts still match all 8 events and end at beat 7.0; part B exposes one pause gap. Shared state records 6 consensus, 6 single-part and 4 divergent snapshots; maximum position spread is 4 beats; mean absolute asynchrony 957.5 ms and max 1520 ms.
+- **advance_one_performer**: part A remains 8/8; part B matches 6 observations and exposes 2 forward-skipped score events; both end at beat 7.0. Shared state records 9 consensus, 2 single-part and 3 divergent snapshots; maximum spread 2 beats; mean absolute asynchrony 500 ms and max 980 ms.
+
+The clean case can momentarily show a one-beat spread because snapshots are emitted at individual part-event arrival times; it remains within the configured consensus semantics and is not counted as divergence.
+
+## Fail-soft conclusion
+
+The deterministic evidence supports the intended architecture boundary:
+
+- disruption in one performer/part does not overwrite the other part's independent recovery result;
+- a stale performer can be excluded from the shared-position calculation while remaining visible in snapshot state;
+- a dropped observation is surfaced as recovery evidence rather than silently corrupting the unaffected part;
+- larger score-position disagreement is exposed as `divergent` rather than forced into false consensus;
+- shared confidence remains unavailable.
+
+These are repository-owned symbolic fixtures, not real acoustic duet-performance claims.
 
 ## Authority boundary
 
@@ -56,3 +70,5 @@ SF-09 does not establish:
 - pedagogical grading.
 
 Those require later independent evidence.
+
+Permanent benchmark evidence: `benchmarks/reports/SF09_DUET_RESEARCH.md`.

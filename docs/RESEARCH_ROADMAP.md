@@ -11,8 +11,8 @@
 | SF-06 | Robustness and recovery | Complete — 11-scenario deterministic recovery suite + evidence |
 | SF-07 | Performance alignment | Complete — post-performance analysis/export contracts + CI evidence |
 | SF-08 | Performance error intelligence foundation | Complete — evidence taxonomy, abstention contracts + CI evidence |
-| SF-09 | Duet research | Active — next autonomous stage |
-| SF-10 | Quartet / multi-channel ensemble | Planned |
+| SF-09 | Duet research | Complete — independent part following, derived shared position, asynchrony/fail-soft CI evidence |
+| SF-10 | Quartet / multi-channel ensemble | Active — next autonomous stage |
 | SF-11 | Mixed ensemble | Planned |
 | SF-12 | Orchestra global score following | Planned |
 | SF-13 | Orchestra section research | Planned |
@@ -20,7 +20,7 @@
 
 ## Completed evidence
 
-SF-01, SF-02, SF-03, SF-05, SF-06, SF-07, and SF-08 have permanent reports under `benchmarks/reports/`.
+SF-01, SF-02, SF-03, SF-05, SF-06, SF-07, SF-08, and SF-09 have permanent reports under `benchmarks/reports/`.
 
 ## SF-04 narrow external-evidence gate
 
@@ -72,13 +72,26 @@ SF-04 remains incomplete until real violin research evidence is reproducible, bu
 8. CI `34105618113` passed all 6 jobs including Python 3.11/3.12, recovery, performance alignment, SF-08 benchmark and the Matchmaker regression chain.
 9. Permanent evidence is recorded in `benchmarks/reports/SF08_ERROR_INTELLIGENCE.md`.
 
-## SF-09 active plan
+## SF-09 completed duet baseline
 
-1. Define ST-owned duet/performer/part identity contracts without changing single-performer source-of-truth contracts.
-2. Build deterministic repository-owned two-part score and symbolic performance fixtures before using external duet corpora.
-3. Evaluate per-part alignment plus a shared global score-position representation; do not assume either is authoritative without evidence.
-4. Measure inter-part onset asynchrony and local timing divergence with explicit clocks and provenance.
-5. Add fail-soft cases where one performer pauses, drops observations, advances or diverges while the other remains aligned.
-6. Preserve missing confidence and abstention semantics independently for each performer/part.
-7. Keep duet evidence isolated from quartet/orchestra claims; SF-10+ must earn their own multi-channel evidence.
-8. Publish permanent duet evidence before advancing to SF-10.
+1. `DuetPartInputV1` keeps stable part and performer identity and requires exactly two unique parts/performers.
+2. Each part runs through its own recovery follower; no shared follower overwrites per-part alignment truth.
+3. Shared snapshots use only recent non-stale part positions, derive their score beat by median, and expose `consensus`, `single_part`, or `divergent` state plus spread.
+4. Shared confidence remains unavailable; per-part scalar confidence is not combined into a fabricated duet confidence.
+5. Common aligned score beats produce signed/absolute inter-part onset asynchrony evidence.
+6. Repository-owned cases cover clean 20 ms offset, one dropped observation, one-performer pause and one-performer advance/skip.
+7. A dropped event preserves the unaffected part's 8/8 mapping while the affected part exposes one forward skip; pause and advance cases expose stale/single-part/divergent shared states rather than globally blocking.
+8. Implementation CI `34394175788` passed all 7 jobs, including Python 3.11/3.12, duet/recovery/performance/error-intelligence benchmarks and the full Matchmaker regression chain.
+9. Authority remains `duet_research_not_ensemble_authority`; mono-mixture source separation, quartet/orchestra behavior, conductor intent and pedagogy remain unproven.
+10. Permanent evidence is recorded in `benchmarks/reports/SF09_DUET_RESEARCH.md`.
+
+## SF-10 active plan
+
+1. Generalize duet identity/aggregation into an N-part contract without weakening independent per-part alignment authority.
+2. Start with exactly four repository-owned symbolic channels and stable performer/part identities; do not claim mono-mixture separation.
+3. Define explicit quorum/coverage semantics for shared position when 1–N parts are stale, unavailable or divergent.
+4. Report distribution/spread of recent part positions rather than forcing consensus; keep shared confidence unavailable until a calibrated model exists.
+5. Measure pairwise and aggregate timing-asynchrony evidence with explicit provenance.
+6. Add deterministic fail-soft cases: one dropped channel/event, one paused performer, one divergent section and partial channel loss while remaining parts continue.
+7. Preserve SF-09 behavior as regression evidence and keep quartet/multi-channel claims isolated from SF-11 mixed-ensemble and SF-12 orchestra authority.
+8. Publish permanent SF-10 evidence before advancing.

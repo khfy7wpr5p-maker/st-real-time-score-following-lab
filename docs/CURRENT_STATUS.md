@@ -1,6 +1,6 @@
 # Current Status
 
-Date: 2026-09-07
+Date: 2026-09-09
 
 ## Stage state
 
@@ -13,7 +13,8 @@ Date: 2026-09-07
 - SF-06 Robustness and Recovery: **complete for repository-owned deterministic symbolic recovery evidence**.
 - SF-07 Performance Alignment: **complete for repository-owned deterministic post-performance analysis/export evidence**.
 - SF-08 Performance Error Intelligence Foundation: **complete for repository-owned deterministic evidence-first error/deviation intelligence**.
-- SF-09 Duet Research: **next active autonomous stage**.
+- SF-09 Duet Research: **complete for repository-owned deterministic independent two-performer/part evidence**.
+- SF-10 Quartet / Multi-Channel Ensemble: **next active autonomous stage**.
 
 ## SF-04 narrow gate
 
@@ -84,6 +85,22 @@ Repository-owned deterministic evidence:
 
 See `benchmarks/reports/SF08_ERROR_INTELLIGENCE.md` and `docs/SF08_ERROR_INTELLIGENCE.md`.
 
+## SF-09 evidence
+
+SF-09 preserves two independent `RecoveryAwareSymbolicFollower` paths and derives a shared duet snapshot without replacing either part's alignment authority. Stale/unavailable/divergent states remain explicit, and shared confidence stays unavailable.
+
+Implementation head CI `34394175788` passed all 7 jobs: Python 3.11/3.12 Ruff + full pytest, duet research, recovery, performance alignment, error intelligence and the complete Matchmaker/SF-01/SF-02/SF-03/SF-05 regression chain.
+
+Repository-owned deterministic duet evidence:
+- clean: both parts matched 8/8 score events and ended at beat 7; 8 common asynchrony points with ~20 ms mean/max absolute offset; 15 consensus snapshots, 0 divergent;
+- one dropped part-B event: part A remained 8/8, part B matched 7 events and exposed one forward-skipped score event; both still ended at beat 7; 7 common asynchrony points with ~20 ms mean/max offset; 0 divergent snapshots;
+- one performer pause: both parts still matched 8 events and ended at beat 7; part B exposed one pause gap; shared state produced 6 single-part and 4 divergent snapshots rather than blocking part A; max spread 4 beats and max absolute asynchrony 1520 ms;
+- one performer advance: part A remained 8/8; part B matched 6 observations while exposing 2 forward-skipped score events; shared state exposed 3 divergent snapshots, max spread 2 beats, and max absolute asynchrony 980 ms.
+
+The clean 1-beat maximum snapshot spread is a transient event-arrival ordering effect and stayed inside the configured consensus semantics; it is not reported as duet divergence. Asynchrony is evidence, not a quality grade. `authority_boundary` remains `duet_research_not_ensemble_authority`.
+
+See `benchmarks/reports/SF09_DUET_RESEARCH.md` and `docs/SF09_DUET_RESEARCH.md`.
+
 ## Current autonomous direction
 
-Proceed to SF-09 Duet Research. Establish ST-owned multi-performer/part observation and alignment contracts, deterministic two-part score/performance fixtures, per-part versus shared-position evidence, timing-asynchrony measurements, fail-soft behavior when one performer drops or diverges, and explicit confidence/provenance without prematurely generalizing duet evidence to quartet/orchestra authority.
+Proceed to SF-10 Quartet / Multi-Channel Ensemble. Generalize identity and aggregation only where SF-09 evidence supports it, preserve independent part authority, add N-part stale/divergence/quorum semantics, deterministic four-part fixtures and fail-soft partial-part behavior, and do not generalize multi-channel synthetic evidence to mono-mixture source separation or orchestra authority.
