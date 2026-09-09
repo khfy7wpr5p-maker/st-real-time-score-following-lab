@@ -21,6 +21,17 @@ from .duet import (
     DuetSharedPositionSnapshotV1,
     SharedPositionStatus,
 )
+from .ensemble import (
+    QuartetAnalysisReportV1,
+    QuartetAnalysisSummaryV1,
+    QuartetAnalyzer,
+    QuartetPairwiseAsynchronyPointV1,
+    QuartetPartAlignmentV1,
+    QuartetPartInputV1,
+    QuartetPartPositionV1,
+    QuartetPositionStatus,
+    QuartetSharedPositionSnapshotV1,
+)
 from .error_intelligence import (
     AbstentionKind,
     EvidenceAbstentionV1,
@@ -73,6 +84,15 @@ __all__ = [
     "PerformanceErrorIntelligenceSummaryV1",
     "PerformanceEvidenceEventV1",
     "PerformanceEventV1",
+    "QuartetAnalysisReportV1",
+    "QuartetAnalysisSummaryV1",
+    "QuartetAnalyzer",
+    "QuartetPairwiseAsynchronyPointV1",
+    "QuartetPartAlignmentV1",
+    "QuartetPartInputV1",
+    "QuartetPartPositionV1",
+    "QuartetPositionStatus",
+    "QuartetSharedPositionSnapshotV1",
     "RecoveryAwareSymbolicFollower",
     "RecoveryMatch",
     "ScorePositionV1",
