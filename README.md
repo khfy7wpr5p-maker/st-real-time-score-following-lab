@@ -13,12 +13,13 @@ Produce benchmarkable `score position + tempo + confidence` from simulated or li
 - Audio-only and transcription->symbolic following are parallel research paths.
 - Latency, recovery and robustness are first-class metrics alongside alignment accuracy.
 - Multi-performer streams retain independent part/performer identity; shared position is derived evidence rather than new score authority.
+- Multi-channel shared positions require explicit quorum; insufficient evidence stays unavailable.
 - Python is the research language; C++ extraction starts only after reproducible benchmark evidence.
 - Experimental evidence is not production or pedagogical authority.
 
 ## Current stage
 
-**SF-09 Duet Research is complete for repository-owned deterministic two-performer evidence. SF-10 Quartet / Multi-Channel Ensemble is the next autonomous stage.**
+**SF-10 Quartet / Multi-Channel Ensemble is complete for repository-owned deterministic four-channel evidence. SF-11 Mixed Ensemble is the next autonomous stage.**
 
 Completed permanent evidence currently covers:
 - SF-01 Matchmaker synthetic MIDI baseline;
@@ -28,7 +29,8 @@ Completed permanent evidence currently covers:
 - SF-06 robustness/recovery perturbation suite;
 - SF-07 post-performance alignment, segmentation, timing/tempo summaries and JSON/CSV export;
 - SF-08 evidence-first performance deviation events, abstention contracts and JSON/CSV export;
-- SF-09 independent duet part-following, derived shared-position states, inter-part asynchrony and fail-soft divergence evidence.
+- SF-09 independent duet part-following, derived shared-position states, inter-part asynchrony and fail-soft divergence evidence;
+- SF-10 independent quartet channels, 3-of-4 quorum semantics, six-pair timing evidence and partial-channel fail-soft behavior.
 
 SF-04 Solo Violin remains a narrow real-evidence rights gate and does not block independent stages.
 
@@ -42,10 +44,11 @@ Evidence reports:
 - `benchmarks/reports/SF07_PERFORMANCE_ALIGNMENT.md`
 - `benchmarks/reports/SF08_ERROR_INTELLIGENCE.md`
 - `benchmarks/reports/SF09_DUET_RESEARCH.md`
+- `benchmarks/reports/SF10_QUARTET_MULTICHANNEL.md`
 
 ## Roadmap
 
-SF-00 foundation -> SF-01 Matchmaker baseline -> SF-02 realtime streaming -> SF-03 symbolic following -> SF-04 solo violin -> SF-05 classical guitar -> SF-06 robustness/recovery -> SF-07 performance alignment -> SF-08 performance error intelligence -> SF-09 duet -> SF-10 quartet/multi-channel ensemble -> mixed ensemble/orchestra research -> production candidate extraction.
+SF-00 foundation -> SF-01 Matchmaker baseline -> SF-02 realtime streaming -> SF-03 symbolic following -> SF-04 solo violin -> SF-05 classical guitar -> SF-06 robustness/recovery -> SF-07 performance alignment -> SF-08 performance error intelligence -> SF-09 duet -> SF-10 quartet/multi-channel ensemble -> SF-11 mixed ensemble -> SF-12 orchestra global following -> production candidate extraction.
 
 ## Development
 
@@ -73,6 +76,7 @@ python benchmarks/run_recovery_suite.py
 python benchmarks/run_performance_alignment.py
 python benchmarks/run_error_intelligence.py
 python benchmarks/run_duet_research.py
+python benchmarks/run_quartet_research.py
 ```
 
 Matchmaker 0.3.0 is evaluated only through an adapter and is not the ST runtime authority.
