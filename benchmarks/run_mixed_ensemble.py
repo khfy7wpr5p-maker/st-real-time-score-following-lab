@@ -87,7 +87,7 @@ def _case(name: str, parts: tuple[MixedEnsemblePartInputV1, ...]) -> dict[str, o
             for part in report.parts
         ],
         "summary": report.summary.to_dict(),
-        "timing_abstentions": [asdict for asdict in (item.reason for item in report.timing_abstentions)],
+        "timing_abstentions": [item.reason for item in report.timing_abstentions],
     }
 
 
@@ -123,7 +123,10 @@ def main() -> None:
         "schema": "st.score_following.mixed_ensemble_benchmark.v1",
         "boundaries": [
             "instrument family and observation path provenance remain explicit",
-            "unverified timing paths keep independent score following but abstain from shared timing evidence",
+            (
+                "unverified timing paths keep independent score following but abstain "
+                "from shared timing evidence"
+            ),
             "shared position uses only recent timing-comparable paths",
             "below quorum no mixed-ensemble shared position is fabricated",
             "synthetic oracle path is architecture evidence only",
