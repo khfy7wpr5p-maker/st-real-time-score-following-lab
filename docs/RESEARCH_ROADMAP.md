@@ -13,14 +13,14 @@
 | SF-08 | Performance error intelligence foundation | Complete — evidence taxonomy, abstention contracts + CI evidence |
 | SF-09 | Duet research | Complete — independent part following, derived shared position, asynchrony/fail-soft CI evidence |
 | SF-10 | Quartet / multi-channel ensemble | Complete — 4-channel identity, 3-of-4 quorum, pairwise timing/fail-soft CI evidence |
-| SF-11 | Mixed ensemble | Active — next autonomous stage |
-| SF-12 | Orchestra global score following | Planned |
+| SF-11 | Mixed ensemble | Complete — heterogeneous path provenance, timing eligibility/abstention, fail-soft CI evidence |
+| SF-12 | Orchestra global score following | Active — next autonomous stage |
 | SF-13 | Orchestra section research | Planned |
 | SF-14 | Production candidate extraction | Planned |
 
 ## Completed evidence
 
-SF-01, SF-02, SF-03, SF-05, SF-06, SF-07, SF-08, SF-09, and SF-10 have permanent reports under `benchmarks/reports/`.
+SF-01, SF-02, SF-03, SF-05, SF-06, SF-07, SF-08, SF-09, SF-10, and SF-11 have permanent reports under `benchmarks/reports/`.
 
 ## SF-04 narrow external-evidence gate
 
@@ -100,13 +100,29 @@ SF-04 remains incomplete until real violin research evidence is reproducible, bu
 11. Authority remains `quartet_multichannel_research_not_mixed_ensemble_authority`; mono-mixture source separation, arbitrary ensemble scaling, real-room generalization, conductor intent and pedagogy remain unproven.
 12. Permanent evidence is recorded in `benchmarks/reports/SF10_QUARTET_MULTICHANNEL.md`.
 
-## SF-11 active plan
+## SF-11 completed mixed-ensemble baseline
 
-1. Add explicit heterogeneous instrument/observation-path identity without weakening independent part authority.
-2. Keep repository-owned evidence synthetic and channel-separated initially; do not imply source separation from a mono room recording.
-3. Compare mixed instrument-family timing/position evidence under a shared score while preserving source-specific provenance.
-4. Reuse quorum only after defining what constitutes eligible/recent evidence across heterogeneous observation paths.
-5. Keep shared confidence unavailable unless a calibrated combination method is independently validated.
-6. Add fail-soft cases where one instrument path pauses, drops events, or diverges while other paths continue.
-7. Preserve SF-09/SF-10 as regressions and isolate SF-11 claims from SF-12 orchestra authority.
-8. Publish permanent mixed-ensemble evidence before advancing.
+1. `MixedEnsemblePartInputV1` adds explicit instrument-family, observation-path, timing-basis, and source provenance while retaining independent part/performer/channel identity.
+2. SF-11 does not reinterpret `PerformanceEventV1.observed_at_s` as inference latency and does not silently normalize heterogeneous pipelines.
+3. Only paths with verified `performance_onset` timing contribute to shared timing/quorum and pairwise timing evidence; unverified paths keep independent score following.
+4. Ineligible pair comparisons produce explicit `MixedTimingAbstentionV1` records rather than fabricated timing values.
+5. The default shared-position quorum remains 3 of 4 recent timing-eligible parts; below quorum no shared beat or spread is published.
+6. Clean heterogeneous evidence produced 48 pairwise timing points and 29 full-consensus snapshots with no divergence.
+7. Marking voice timing unverified preserved its 8/8 independent alignment while reducing comparable pairs from 6 to 3 and producing 3 explicit voice-related timing abstentions.
+8. Combining unverified voice timing with a guitar pause produced 8 true degraded insufficient-quorum snapshots and 2 divergent snapshots while every independent follower still reached beat 7.
+9. Dropped-guitar evidence localized one forward skip to guitar; advanced-voice evidence localized two forward skips to voice and exposed 12 divergent snapshots.
+10. Shared confidence remains unavailable; synthetic-oracle evidence is not AMT-quality evidence.
+11. Implementation CI `34529350858` passed all 9 jobs on `a694a4ff088ed7ef45192fca77032a283dc0410a`.
+12. Authority remains `mixed_ensemble_channel_separated_research_not_acoustic_mixture_authority`; acoustic source separation, real-room mixed ensemble, calibrated cross-model latency correction, orchestra behavior, conductor intent, and pedagogy remain unproven.
+13. Permanent evidence is recorded in `benchmarks/reports/SF11_MIXED_ENSEMBLE.md`.
+
+## SF-12 active plan
+
+1. Introduce a bounded orchestra-global research contract rather than scaling the four-part contract by assumption.
+2. Keep score-global position derived from independently auditable section/source evidence; do not erase section provenance.
+3. Define explicit global quorum/coverage and abstention semantics before publishing an orchestra-level position.
+4. Start with repository-owned deterministic synthetic sections and controlled perturbations; no acoustic orchestra/source-separation claim.
+5. Exercise global recovery for section dropout, disagreement, pause, forward skip, backward/repeat movement, and partial evidence loss.
+6. Keep orchestra confidence unavailable until independently calibrated.
+7. Preserve SF-09/SF-10/SF-11 as regressions and isolate SF-12 global claims from SF-13 section-detail research.
+8. Publish permanent SF-12 evidence before advancing.

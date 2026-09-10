@@ -1,6 +1,6 @@
 # Current Status
 
-Date: 2026-09-09
+Date: 2026-09-10
 
 ## Stage state
 
@@ -15,7 +15,8 @@ Date: 2026-09-09
 - SF-08 Performance Error Intelligence Foundation: **complete for repository-owned deterministic evidence-first error/deviation intelligence**.
 - SF-09 Duet Research: **complete for repository-owned deterministic independent two-performer/part evidence**.
 - SF-10 Quartet / Multi-Channel Ensemble: **complete for repository-owned deterministic independent four-channel evidence**.
-- SF-11 Mixed Ensemble: **next active autonomous stage**.
+- SF-11 Mixed Ensemble: **complete for repository-owned deterministic channel-separated heterogeneous provenance evidence**.
+- SF-12 Orchestra Global Score Following: **next active autonomous stage**.
 
 ## SF-04 narrow gate
 
@@ -119,6 +120,23 @@ Shared confidence remains unavailable. Pairwise asynchrony and quorum loss are e
 
 See `benchmarks/reports/SF10_QUARTET_MULTICHANNEL.md` and `docs/SF10_QUARTET_MULTICHANNEL.md`.
 
+## SF-11 evidence
+
+SF-11 preserves independent four-part following while making heterogeneous instrument-family, observation-path, and timing-basis provenance explicit. It does not reinterpret source event onset timestamps as model inference latency.
+
+Implementation CI `34529350858` passed all 9 jobs on head `a694a4ff088ed7ef45192fca77032a283dc0410a`: Python 3.11/3.12 Ruff + full pytest, mixed-ensemble, quartet, duet, recovery, performance-alignment, error-intelligence, and the complete Matchmaker regression chain.
+
+Repository-owned deterministic mixed-ensemble evidence:
+- clean: piano/direct-MIDI, guitar/transcription-symbolic, violin/external adapter, and voice/synthetic-oracle each matched 8/8 and ended at beat 7; all 6 timing pairs were eligible and produced 48 timing points; 29 full-consensus snapshots and no divergence;
+- unverified voice timing: all four followers still reached beat 7, but voice was excluded from shared timing; only 3 pairs remained comparable and the 3 voice-related pairs produced explicit abstentions;
+- unverified voice plus guitar pause: all four followers remained 8/8; guitar exposed one pause gap; shared evidence produced 8 true degraded insufficient-quorum snapshots and 2 divergent snapshots while voice remained timing-ineligible;
+- dropped guitar event: guitar exposed one forward skip while the other three remained 8/8; all reached beat 7 and no divergence was fabricated;
+- advancing voice: voice exposed two forward skips, the other three remained 8/8, and 12 divergent snapshots exposed the disagreement instead of forcing consensus.
+
+Shared confidence remains unavailable. `synthetic_oracle` is architecture evidence only. `authority_boundary` remains `mixed_ensemble_channel_separated_research_not_acoustic_mixture_authority`; no acoustic source separation, real-room ensemble generalization, inferred model latency, orchestra authority, or pedagogy is claimed.
+
+See `benchmarks/reports/SF11_MIXED_ENSEMBLE.md` and `docs/SF11_MIXED_ENSEMBLE.md`.
+
 ## Current autonomous direction
 
-Proceed to SF-11 Mixed Ensemble. Preserve independent source/part authority and the evidence-first quorum rules established by SF-09/SF-10. Introduce heterogeneous instrument/observation-path identity only where repository-owned evidence can validate it. Do not treat four symbolic channels as evidence for mono acoustic source separation, real-room mixed ensemble performance, conductor intent or orchestra behavior.
+Proceed to SF-12 Orchestra Global Score Following. Reuse only validated identity, recovery, quorum, abstention, and provenance semantics. Start with repository-owned bounded synthetic section/global evidence; do not extrapolate four channel-separated paths into acoustic orchestra source separation, conductor-intent inference, or production authority.

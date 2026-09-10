@@ -1,39 +1,37 @@
 # SF-11 Mixed Ensemble
 
-## Goal
+SF-11 extends the SF-10 four-channel research boundary to heterogeneous instrument and observation paths while preserving independent per-part authority.
 
-Add heterogeneous instrument-family and observation-path provenance without treating every symbolic channel as timing-equivalent or claiming source separation from an acoustic mixture.
+## Contracts
 
-## Provenance boundary
+Each `MixedEnsemblePartInputV1` retains:
+- stable `part_id`, `performer_id`, and `channel_id`;
+- `InstrumentFamily`;
+- `ObservationPathKind`;
+- `ObservationTimingBasis`;
+- explicit `path_source` provenance;
+- independent score and observation streams.
 
-`MixedEnsemblePartInputV1` extends stable part/performer/channel identity with:
-
-- `instrument_family`;
-- `observation_path`;
-- `timing_basis`;
-- `path_source`.
-
-The initial repository-owned fixture deliberately uses four different families and four different paths: piano/direct MIDI, guitar/transcription-symbolic, violin/external-event-adapter, and voice/synthetic-oracle.
-
-`SYNTHETIC_ORACLE` is architecture-only evidence. It is not transcription-model accuracy evidence.
+The current research boundary requires exactly four parts and at least two instrument families and two observation paths. It is intentionally not an arbitrary-N or orchestra contract.
 
 ## Timing eligibility
 
-`PerformanceEventV1.observed_at_s` is not redefined by SF-11. In particular, model inference latency is not silently inserted into or subtracted from event onset time.
+`PerformanceEventV1.observed_at_s` remains the event timestamp supplied by its source. SF-11 does not repurpose this field as model inference latency and does not silently compensate heterogeneous paths.
 
-A path with `timing_basis = performance_onset` can participate in shared stale/quorum timing and pairwise onset-asynchrony evidence. A path with `timing_basis = unverified`:
+Only `ObservationTimingBasis.PERFORMANCE_ONSET` paths participate in shared timing/quorum and pairwise asynchrony evidence. `UNVERIFIED` paths still run their independent score follower but are excluded from comparisons whose timing basis cannot be justified.
 
-- keeps its own independent recovery/score-following result;
-- remains visible with full path provenance;
-- is excluded from timing-based shared-position aggregation;
-- causes pairwise timing comparisons involving that part to become explicit abstentions rather than zero-latency assumptions.
+Pairs involving an ineligible path create `MixedTimingAbstentionV1`. This makes missing comparability explicit rather than fabricating timing evidence.
 
-## Quorum
+## Shared position
 
-The default mixed-ensemble shared-position quorum remains 3 of 4 timing-comparable recent parts. Below quorum, shared score beat and spread stay unavailable.
+The default shared-position quorum remains 3 of 4 timing-eligible, recent parts. Below quorum, `shared_score_beat` and spread remain unavailable. At or above quorum the layer reports full consensus, quorum consensus, or divergence while retaining contributing, stale, unavailable, and timing-ineligible part IDs.
 
-## Authority boundary
+Shared confidence remains unavailable because no calibrated heterogeneous confidence-combination method has been validated.
 
-`mixed_ensemble_channel_separated_research_not_acoustic_mixture_authority`
+## Evidence boundary
 
-SF-11 does not establish real-room mixed-ensemble tracking, mono microphone source separation, calibrated cross-path timing correction, conductor intent, orchestra behavior, or pedagogy.
+The SF-11 benchmark is deterministic and channel-separated. It covers piano/direct MIDI, guitar/transcription-symbolic, violin/external-event-adapter, and voice/synthetic-oracle paths plus timing-ineligible, pause, dropped-event, and advance cases.
+
+This does not prove acoustic mixture source separation, physical microphone behavior, real musician/room generalization, AMT model quality, cross-model latency correction, orchestra behavior, conductor intent, or pedagogy.
+
+Permanent numeric evidence is in `benchmarks/reports/SF11_MIXED_ENSEMBLE.md`.
