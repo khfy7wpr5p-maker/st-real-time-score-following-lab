@@ -12,7 +12,6 @@ from .ensemble import (
     QuartetAnalyzer,
     QuartetPartAlignmentV1,
     QuartetPartInputV1,
-    QuartetPositionStatus,
 )
 from .recovery import RecoveryMatch
 from .symbolic import SymbolicScoreEvent
@@ -436,7 +435,10 @@ class MixedEnsembleAnalyzer:
             MixedTimingAbstentionV1(
                 first_part_id=first,
                 second_part_id=second,
-                reason="pair timing abstained because at least one observation path lacks verified performance-onset timing",
+                reason=(
+                    "pair timing abstained because at least one observation path lacks "
+                    "verified performance-onset timing"
+                ),
             )
             for first, second in sorted(all_pairs - comparable_pairs)
         )
