@@ -65,6 +65,17 @@ from .orchestra_global import (
     OrchestraGlobalScorePointV1,
     OrchestraGlobalSummaryV1,
 )
+from .orchestra_section import (
+    OrchestraSectionAlignmentV1,
+    OrchestraSectionAnalyzer,
+    OrchestraSectionFamily,
+    OrchestraSectionFusionSnapshotV1,
+    OrchestraSectionFusionStatus,
+    OrchestraSectionInputV1,
+    OrchestraSectionPositionV1,
+    OrchestraSectionReportV1,
+    OrchestraSectionSummaryV1,
+)
 from .performance_alignment import (
     AlignmentProvenanceV1,
     PerformanceAlignmentPointV1,
@@ -117,6 +128,15 @@ __all__ = [
     "OrchestraGlobalReportV1",
     "OrchestraGlobalScorePointV1",
     "OrchestraGlobalSummaryV1",
+    "OrchestraSectionAlignmentV1",
+    "OrchestraSectionAnalyzer",
+    "OrchestraSectionFamily",
+    "OrchestraSectionFusionSnapshotV1",
+    "OrchestraSectionFusionStatus",
+    "OrchestraSectionInputV1",
+    "OrchestraSectionPositionV1",
+    "OrchestraSectionReportV1",
+    "OrchestraSectionSummaryV1",
     "PerformanceAlignmentPointV1",
     "PerformanceAlignmentReportV1",
     "PerformanceAlignmentSummaryV1",
