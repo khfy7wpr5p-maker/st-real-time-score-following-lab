@@ -14,13 +14,13 @@
 | SF-09 | Duet research | Complete — independent part following, derived shared position, asynchrony/fail-soft CI evidence |
 | SF-10 | Quartet / multi-channel ensemble | Complete — 4-channel identity, 3-of-4 quorum, pairwise timing/fail-soft CI evidence |
 | SF-11 | Mixed ensemble | Complete — heterogeneous path provenance, timing eligibility/abstention, fail-soft CI evidence |
-| SF-12 | Orchestra global score following | Active — next autonomous stage |
-| SF-13 | Orchestra section research | Planned |
+| SF-12 | Orchestra global score following | Complete — deterministic global measure/beat texture-proxy + recovery/CPU evidence; real orchestral audio remains license-gated |
+| SF-13 | Orchestra section research | Active — next autonomous research stage |
 | SF-14 | Production candidate extraction | Planned |
 
 ## Completed evidence
 
-SF-01, SF-02, SF-03, SF-05, SF-06, SF-07, SF-08, SF-09, SF-10, and SF-11 have permanent reports under `benchmarks/reports/`.
+SF-01, SF-02, SF-03, SF-05, SF-06, SF-07, SF-08, SF-09, SF-10, SF-11, and SF-12 have permanent reports under `benchmarks/reports/`.
 
 ## SF-04 narrow external-evidence gate
 
@@ -116,13 +116,27 @@ SF-04 remains incomplete until real violin research evidence is reproducible, bu
 12. Authority remains `mixed_ensemble_channel_separated_research_not_acoustic_mixture_authority`; acoustic source separation, real-room mixed ensemble, calibrated cross-model latency correction, orchestra behavior, conductor intent, and pedagogy remain unproven.
 13. Permanent evidence is recorded in `benchmarks/reports/SF11_MIXED_ENSEMBLE.md`.
 
-## SF-12 active plan
+## SF-12 completed global-orchestra structural baseline
 
-1. Introduce a bounded orchestra-global research contract rather than scaling the four-part contract by assumption.
-2. Keep score-global position derived from independently auditable section/source evidence; do not erase section provenance.
-3. Define explicit global quorum/coverage and abstention semantics before publishing an orchestra-level position.
-4. Start with repository-owned deterministic synthetic sections and controlled perturbations; no acoustic orchestra/source-separation claim.
-5. Exercise global recovery for section dropout, disagreement, pause, forward skip, backward/repeat movement, and partial evidence loss.
-6. Keep orchestra confidence unavailable until independently calibrated.
-7. Preserve SF-09/SF-10/SF-11 as regressions and isolate SF-12 global claims from SF-13 section-detail research.
-8. Publish permanent SF-12 evidence before advancing.
+1. `OrchestraGlobalScorePointV1` represents global measure/beat identity and aggregate pitch-class texture without instrument/section identity.
+2. `OrchestraGlobalObservationV1` preserves optional source confidence; unavailable confidence remains unavailable.
+3. Texture Jaccard similarity is an auditable match score and is never promoted to calibrated confidence.
+4. Normal tracking uses bounded forward/backward search; initial acquisition and long-gap restart use global search first; configured mismatch streaks may also trigger global search.
+5. Repository-owned evidence spans clean tracking, controlled dense-texture corruption, tempo/rubato timestamp variation, missing observations, forward skip, backward jump, and pause/restart.
+6. Every received observation in the seven deterministic cases mapped to its declared global score point. Missing observations exposed two skipped points; the explicit forward skip exposed six; backward jump and restart transitions remained explicit.
+7. Forward skip, backward jump, and pause/restart recovered on the first post-boundary observation in the fixture.
+8. CI `34678255101` passed all 10 jobs on implementation head `7f023613697a3ae999bb0f2ebc6fd86d5adbde72`.
+9. Clean CI local matching cost was about 0.0207 ms median / 0.0258 ms P95. This excludes microphone, features/models, buffering, transport, UI, and other end-to-end latency.
+10. Real dense orchestral audio, calibrated global confidence, percent-within-ms acoustic alignment, large repeated-score robustness, source separation, conductor intent, and per-instrument transcription remain unproven.
+11. Authority is `global_measure_beat_research_not_per_instrument_transcription_authority`.
+12. Permanent evidence is recorded in `benchmarks/reports/SF12_ORCHESTRA_GLOBAL.md`.
+
+## SF-13 active plan
+
+1. Research section-level observation/fusion without retroactively widening SF-12 global authority.
+2. Begin with explicit section groups such as strings, winds, and brass; preserve source/group provenance.
+3. Compare section agreement/disagreement and partial section loss using repository-owned deterministic evidence first.
+4. Treat section grouping as research evidence, not source-separation proof or a product promise.
+5. Keep confidence unavailable unless source/calibration evidence exists.
+6. If real section-level datasets are rights-gated, continue synthetic structural work and record the gate.
+7. Produce enough evidence to decide whether section intelligence deserves productization before SF-14.

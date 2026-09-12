@@ -15,12 +15,13 @@ Produce benchmarkable `score position + tempo + confidence` from simulated or li
 - Multi-performer streams retain independent part/performer identity; shared position is derived evidence rather than new score authority.
 - Multi-channel shared positions require explicit quorum; insufficient evidence stays unavailable.
 - Heterogeneous observation paths retain timing-basis provenance; unverified timing is excluded from comparisons rather than silently corrected.
+- Orchestra-global evidence is measure/beat authority only; aggregate texture matching must not be presented as per-instrument transcription.
 - Python is the research language; C++ extraction starts only after reproducible benchmark evidence.
 - Experimental evidence is not production or pedagogical authority.
 
 ## Current stage
 
-**SF-11 Mixed Ensemble is complete for repository-owned deterministic channel-separated heterogeneous evidence. SF-12 Orchestra Global Score Following is the next autonomous stage.**
+**SF-12 Orchestra Global Score Following is complete for repository-owned deterministic global measure/beat structural evidence with explicit real-audio limitations. SF-13 Orchestra Section Research is the next autonomous stage.**
 
 Completed permanent evidence currently covers:
 - SF-01 Matchmaker synthetic MIDI baseline;
@@ -32,9 +33,10 @@ Completed permanent evidence currently covers:
 - SF-08 evidence-first performance deviation events, abstention contracts and JSON/CSV export;
 - SF-09 independent duet part-following, derived shared-position states, inter-part asynchrony and fail-soft divergence evidence;
 - SF-10 independent quartet channels, 3-of-4 quorum semantics, six-pair timing evidence and partial-channel fail-soft behavior;
-- SF-11 mixed instrument/path provenance, timing eligibility/abstention, and heterogeneous fail-soft evidence.
+- SF-11 mixed instrument/path provenance, timing eligibility/abstention, and heterogeneous fail-soft evidence;
+- SF-12 orchestra-global aggregate-texture measure/beat tracking plus controlled recovery and CPU-cost evidence.
 
-SF-04 Solo Violin remains a narrow real-evidence rights gate and does not block independent stages.
+SF-04 Solo Violin remains a narrow real-evidence rights gate and does not block independent stages. Real orchestral-audio validation is likewise dataset/license-gated without blocking repository-owned structural research.
 
 Evidence reports:
 
@@ -48,6 +50,7 @@ Evidence reports:
 - `benchmarks/reports/SF09_DUET_RESEARCH.md`
 - `benchmarks/reports/SF10_QUARTET_MULTICHANNEL.md`
 - `benchmarks/reports/SF11_MIXED_ENSEMBLE.md`
+- `benchmarks/reports/SF12_ORCHESTRA_GLOBAL.md`
 
 ## Roadmap
 
@@ -81,6 +84,7 @@ python benchmarks/run_error_intelligence.py
 python benchmarks/run_duet_research.py
 python benchmarks/run_quartet_research.py
 python benchmarks/run_mixed_ensemble.py
+python benchmarks/run_orchestra_global.py
 ```
 
 Matchmaker 0.3.0 is evaluated only through an adapter and is not the ST runtime authority.
