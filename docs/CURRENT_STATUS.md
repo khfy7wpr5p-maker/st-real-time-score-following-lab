@@ -1,6 +1,6 @@
 # Current Status
 
-Date: 2026-09-10
+Date: 2026-09-12
 
 ## Stage state
 
@@ -16,7 +16,8 @@ Date: 2026-09-10
 - SF-09 Duet Research: **complete for repository-owned deterministic independent two-performer/part evidence**.
 - SF-10 Quartet / Multi-Channel Ensemble: **complete for repository-owned deterministic independent four-channel evidence**.
 - SF-11 Mixed Ensemble: **complete for repository-owned deterministic channel-separated heterogeneous provenance evidence**.
-- SF-12 Orchestra Global Score Following: **next active autonomous stage**.
+- SF-12 Orchestra Global Score Following: **complete for repository-owned deterministic global measure/beat structural evidence; real orchestral-audio validation remains dataset/license-gated**.
+- SF-13 Orchestra Section Research: **next active autonomous research stage**.
 
 ## SF-04 narrow gate
 
@@ -137,6 +138,26 @@ Shared confidence remains unavailable. `synthetic_oracle` is architecture eviden
 
 See `benchmarks/reports/SF11_MIXED_ENSEMBLE.md` and `docs/SF11_MIXED_ENSEMBLE.md`.
 
+## SF-12 evidence
+
+SF-12 introduces a separate aggregate-texture follower whose authority is only the global orchestral measure/beat position. It does not scale the four-part follower by assumption and it deliberately carries no instrument/section transcription authority.
+
+Implementation CI `34678255101` passed all 10 jobs on head `7f023613697a3ae999bb0f2ebc6fd86d5adbde72`: Python 3.11/3.12 Ruff + full pytest, orchestra-global, mixed-ensemble, quartet, duet, recovery, performance-alignment, error-intelligence, and the complete Matchmaker regression chain.
+
+Repository-owned deterministic global evidence on a 32-point / 8-measure proxy:
+- clean, controlled dense-texture, and tempo/rubato cases each mapped 32/32 received observations to the declared global point with zero position error;
+- two omitted observations left 30/30 received observations correctly mapped while exposing two forward-skipped score points;
+- a six-point forward skip was exposed and the first post-skip observation mapped correctly;
+- a backward jump was exposed and the first post-jump observation mapped correctly;
+- pause/restart exposed one pause, one restart re-lock, and one global re-lock; the first post-pause observation mapped to the restart target;
+- benchmark confidence remained unavailable rather than being synthesized from texture similarity.
+
+The clean CI sample measured ~0.0207 ms median / ~0.0258 ms P95 local Python matching work. This is **not** microphone/model/end-to-end realtime latency. Real dense-orchestral-audio accuracy, within-50/100/250/500-ms acoustic alignment, calibrated global confidence, and large repeated-score robustness remain unproven and require appropriately licensed real evidence.
+
+`authority_boundary` is `global_measure_beat_research_not_per_instrument_transcription_authority`.
+
+See `benchmarks/reports/SF12_ORCHESTRA_GLOBAL.md` and `docs/SF12_ORCHESTRA_GLOBAL.md`.
+
 ## Current autonomous direction
 
-Proceed to SF-12 Orchestra Global Score Following. Reuse only validated identity, recovery, quorum, abstention, and provenance semantics. Start with repository-owned bounded synthetic section/global evidence; do not extrapolate four channel-separated paths into acoustic orchestra source separation, conductor-intent inference, or production authority.
+Proceed to SF-13 Orchestra Section Research. Research strings/winds/brass/section grouping and section-level observation/fusion feasibility without widening SF-12 global authority or making product promises. Preserve explicit provenance, abstention, confidence-unavailable behavior, and dataset/license gates.
