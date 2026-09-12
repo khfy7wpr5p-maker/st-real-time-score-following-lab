@@ -151,7 +151,10 @@ def main() -> None:
             "independent section followers remain auditable under dropout and disagreement",
             "real acoustic section extraction and source separation are not established",
             "real section-level confidence calibration is unavailable",
-            "therefore section intelligence remains a research candidate rather than a production feature",
+            (
+                "therefore section intelligence remains a research candidate rather than "
+                "a production feature"
+            ),
         ],
         "boundaries": [
             "section labels are repository-owned synthetic research groups",
